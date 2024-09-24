@@ -1,4 +1,6 @@
-namespace Karpenko.Filmogram.Backend.API;
+using Karpenko.University.Backend.Application;
+
+namespace Karpenko.University.Backend.API;
 
 /// <summary>
 /// Главный класс программы
@@ -17,11 +19,17 @@ public class Program {
   /// Добавление сервисов в DI контейнер
   /// </summary>
   private static void ConfigureServices(WebApplicationBuilder builder) {
-    builder.Services.AddControllers();
+    var services = builder.Services;
+
+    // Добавление слоев приложения
+    services.AddApplication();
+    
+    // Конфигурация контроллеров
+    services.AddControllers();
     
     // swagger
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
   }
 
   /// <summary>

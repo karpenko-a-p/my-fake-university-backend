@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karpenko.University.Backend
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karpenko.University.Backend.Domain", "src\Karpenko.University.Backend.Domain\Karpenko.University.Backend.Domain.csproj", "{544872F8-7C55-4C00-8D0F-A0199AA47502}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karpenko.University.Backend.Application", "src\Karpenko.University.Backend.Application\Karpenko.University.Backend.Application.csproj", "{49EF1A64-9419-4216-A3DB-FAA115DE815B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +30,14 @@ Global
 		{544872F8-7C55-4C00-8D0F-A0199AA47502}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{544872F8-7C55-4C00-8D0F-A0199AA47502}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{544872F8-7C55-4C00-8D0F-A0199AA47502}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49EF1A64-9419-4216-A3DB-FAA115DE815B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49EF1A64-9419-4216-A3DB-FAA115DE815B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49EF1A64-9419-4216-A3DB-FAA115DE815B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49EF1A64-9419-4216-A3DB-FAA115DE815B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E050BFC3-245E-4D13-886F-6A57254213E3} = {2383C214-85F8-4207-A978-0C294C37EC24}
 		{544872F8-7C55-4C00-8D0F-A0199AA47502} = {2383C214-85F8-4207-A978-0C294C37EC24}
+		{49EF1A64-9419-4216-A3DB-FAA115DE815B} = {2383C214-85F8-4207-A978-0C294C37EC24}
 	EndGlobalSection
 EndGlobal
