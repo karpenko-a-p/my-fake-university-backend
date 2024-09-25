@@ -27,6 +27,9 @@ public class Program {
     // Конфигурация контроллеров
     services.AddConfiguredControllers();
     
+    // Глобальная обработка непредвиденных ошибок
+    services.AddExceptionHandlingMiddleware();
+
     // Добавление поддержки Swagger
     services.AddSwagger();
   }
@@ -35,6 +38,8 @@ public class Program {
   /// Запуск приложения
   /// </summary>
   private static void StartupApplication(WebApplication app) {
+    app.UseExceptionHandler(options => {});
+
     if (app.Environment.IsDevelopment()) {
       app.UseSwagger();
       app.UseSwaggerUI();

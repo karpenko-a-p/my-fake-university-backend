@@ -1,4 +1,5 @@
 ﻿using System.Net.Mime;
+using Karpenko.University.Backend.API.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Converters;
 
@@ -41,6 +42,15 @@ internal static class ServiceCollectionExtensions {
       string xmlPath = Path.Combine(AppContext.BaseDirectory, "Karpenko.University.Backend.API.xml");
       options.IncludeXmlComments(xmlPath);
     });
+
+    return services;
+  }
+
+  /// <summary>
+  /// Глобальная обработка непредвиденных ошибок
+  /// </summary>
+  internal static IServiceCollection AddExceptionHandlingMiddleware(this IServiceCollection services) {
+    services.AddExceptionHandler<ExceptionHandlingMiddleware>();
 
     return services;
   }
