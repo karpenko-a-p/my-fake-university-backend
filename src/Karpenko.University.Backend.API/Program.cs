@@ -40,15 +40,12 @@ public class Program {
   private static void StartupApplication(WebApplication app) {
     app.UseExceptionHandler(options => {});
 
-    if (app.Environment.IsDevelopment()) {
-      app.UseSwagger();
-      app.UseSwaggerUI();
-    }
+    app.UseSwagger();
 
     app.UseAuthorization();
     app.UseAuthorization();
+
     app.MapControllers();
-
     app.Run();
   }
 }
