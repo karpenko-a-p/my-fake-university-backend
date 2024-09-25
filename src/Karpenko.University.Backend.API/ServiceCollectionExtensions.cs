@@ -1,0 +1,47 @@
+﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Converters;
+
+namespace Karpenko.University.Backend.API;
+
+/// <summary>
+/// Методы расширения для коллекции сервисов для запуска приложения
+/// </summary>
+internal static class ServiceCollectionExtensions {
+  /// <summary>
+  /// Конфигурация контроллеров
+  /// </summary>
+  internal static IServiceCollection AddConfiguredControllers(this IServiceCollection services) {
+    services
+      .AddControllers(options => {
+        options.Filters.Add(new ConsumesAttribute(MediaTypeNames.Application.Json));
+        options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
+      })
+      .ConfigureApiBehaviorOptions(options => {
+        options.SuppressModelStateInvalidFilter = true;
+        options.DisableImplicitFromServicesParameters = true;
+        options.SuppressInferBindingSourcesForParameters = true;
+        options.SuppressMapClientErrors = true;
+        options.SuppressConsumesConstraintForFormFileParameters = true;
+      })
+      .AddNewtonsoftJson(options => {
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+      });
+
+    return services;
+  }
+
+  /// <summary>
+  /// Добавление поддержки Swagger
+  /// </summary>
+  internal static IServiceCollection AddSwagger(this IServiceCollection services) {
+    services.AddSwaggerGenNewtonsoftSupport();
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen(options => {
+      string xmlPath = Path.Combine(AppContext.BaseDirectory, "Karpenko.University.Backend.API.xml");
+      options.IncludeXmlComments(xmlPath);
+    });
+
+    return services;
+  }
+}

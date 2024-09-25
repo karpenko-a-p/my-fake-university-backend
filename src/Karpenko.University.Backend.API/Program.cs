@@ -25,11 +25,10 @@ public class Program {
     services.AddApplication();
     
     // Конфигурация контроллеров
-    services.AddControllers();
+    services.AddConfiguredControllers();
     
-    // swagger
-    services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen();
+    // Добавление поддержки Swagger
+    services.AddSwagger();
   }
 
   /// <summary>
@@ -41,6 +40,7 @@ public class Program {
       app.UseSwaggerUI();
     }
 
+    app.UseAuthorization();
     app.UseAuthorization();
     app.MapControllers();
 
