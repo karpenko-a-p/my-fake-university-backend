@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Karpenko.University.Backend.Application;
 
@@ -10,6 +11,8 @@ public static class DependencyInjection {
   /// Метод для добавления слоя к списку сервисов
   /// </summary>
   public static IServiceCollection AddApplication(this IServiceCollection services) {
+    services.AddTransient<CreateStudent.UseCase>();
+
     return services;
   }
 }

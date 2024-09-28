@@ -1,9 +1,9 @@
-﻿namespace Karpenko.University.Backend.Domain.User;
+﻿namespace Karpenko.University.Backend.Domain.Student;
 
 /// <summary>
 /// Модель пользователя
 /// </summary>
-public sealed class UserModel {
+public sealed class StudentModel {
   /// <summary>
   /// Идентификатор
   /// </summary>

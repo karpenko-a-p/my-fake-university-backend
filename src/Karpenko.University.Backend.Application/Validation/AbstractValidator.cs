@@ -1,4 +1,6 @@
-﻿namespace Karpenko.University.Backend.Application.Validation;
+﻿using System.Numerics;
+
+namespace Karpenko.University.Backend.Application.Validation;
 
 /// <summary>
 /// Абстрактный валидатор
@@ -22,7 +24,12 @@ public abstract class AbstractValidator<TModel> : IValidator<TModel> {
   protected abstract void ValidateModel(TModel model);
 
   /// <summary>
-  /// Получение валидатора для строк
+  /// Валидатора для строк
   /// </summary>
   protected StringValidator StringValidator(string propertyName, string value) => new(propertyName, value, ValidationErrors);
+  
+  /// <summary>
+  /// Валидатор для чисел
+  /// </summary>
+  protected NumberValidator<TNumber> NumberValidator<TNumber>(string propertyName, TNumber value) where TNumber : INumber<TNumber> => new(propertyName, value, ValidationErrors);
 }

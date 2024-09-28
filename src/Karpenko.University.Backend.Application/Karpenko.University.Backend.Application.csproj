@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Karpenko.University.Backend.Core\Karpenko.University.Backend.Core.csproj"/>
+    <ProjectReference Include="..\Karpenko.University.Backend.Domain\Karpenko.University.Backend.Domain.csproj" />
   </ItemGroup>
 
 </Project>
