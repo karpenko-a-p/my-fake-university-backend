@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Karpenko.University.Backend.Application\Karpenko.University.Backend.Application.csproj"/>
+    <ProjectReference Include="..\Karpenko.University.Backend.Infrastructure\Karpenko.University.Backend.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
