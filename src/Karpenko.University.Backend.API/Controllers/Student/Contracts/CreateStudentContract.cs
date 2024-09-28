@@ -1,4 +1,4 @@
-﻿using CreateStudent =Karpenko.University.Backend.Application.UseCases.CreateStudent;
+﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 
 namespace Karpenko.University.Backend.API.Controllers.Student.Contracts;
 

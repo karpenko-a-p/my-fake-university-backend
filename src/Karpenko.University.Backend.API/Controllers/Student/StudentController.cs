@@ -12,13 +12,14 @@ namespace Karpenko.University.Backend.API.Controllers.Student;
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("api/students/v1")]
 [Route("api/students/v1")]
-public sealed class StudentController(ILogger<StudentController> logger) : ControllerBase {
+public sealed class StudentController(ILogger<StudentController> logger) : ExtendedControllerBase {
   /// <summary>
   /// Создание нового студента
   /// </summary>
   /// <response code="200">Студен создан</response>
-  /// <response code="400">Ошибка валидации</response>
-  /// <response code="400">Студен с такой почтой уже существует</response>
+  /// <response code="400">Некорректные данные</response>
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status400BadRequest)]
+  [ProducesResponseType<StudentContract>(StatusCodes.Status200OK)]
   [HttpPost("create-student")]
   public async Task<IActionResult> CreateStudentAsync(
     [FromServices] CreateStudent.UseCase createStudentUseCase,
@@ -33,11 +34,11 @@ public sealed class StudentController(ILogger<StudentController> logger) : Contr
 
 
     return studentCreatingResult switch {
-      CreateStudent.Results.StudentCreated { StudentModel: var studentModel } => Ok(studentModel),
-      CreateStudent.Results.StudentAlreadyExists => BadRequest(new ErrorContract("AlreadyExists", "Студент с такой почтой уже существует")),
+      CreateStudent.Results.StudentCreated { StudentModel: var studentModel } => Ok(new StudentContract(studentModel)),
+      CreateStudent.Results.StudentAlreadyExists => BadRequest(ErrorContract.AlreadyExists("Студент с такой почтой уже существует")),
       CreateStudent.Results.ValidationError { ValidationResult: var errors  } => BadRequest(ErrorContract.ValidationError(errors)),
-      CreateStudent.Results.EmptyData => Ok(new ErrorContract("IncorrectDataType", "Некорректный формат данных")),
-      _ => throw new ArgumentOutOfRangeException()
+      CreateStudent.Results.EmptyData => BadRequest(ErrorContract.IncorrectDataType()),
+      _ => CantHandleRequest()
     };
   }
 }
