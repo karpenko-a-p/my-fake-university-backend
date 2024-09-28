@@ -1,5 +1,6 @@
 using Karpenko.University.Backend.Application;
 using Karpenko.University.Backend.Infrastructure;
+using Karpenko.University.Backend.Persistence;
 
 namespace Karpenko.University.Backend.API;
 
@@ -25,6 +26,7 @@ public class Program {
     // Добавление слоев приложения
     services.AddApplication();
     services.AddInfrastructure();
+    services.AddPersistence();
     
     // Конфигурация контроллеров
     services.AddConfiguredControllers();
