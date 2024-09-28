@@ -10,7 +10,7 @@ public abstract class AbstractValidator<TModel> : IValidator<TModel> {
   /// <summary>
   /// Список ошибок валидации
   /// </summary>
-  protected ICollection<ValidationError> ValidationErrors => [];
+  protected ICollection<ValidationError> ValidationErrors { get; } = [];
 
   /// <inheritdoc />
   public virtual ValidationResult Validate(TModel model) {
@@ -26,10 +26,10 @@ public abstract class AbstractValidator<TModel> : IValidator<TModel> {
   /// <summary>
   /// Валидатора для строк
   /// </summary>
-  protected StringValidator StringValidator(string propertyName, string value) => new(propertyName, value, ValidationErrors);
+  protected StringValidator StringValidator(string propertyName, string? value) => new(propertyName, value, ValidationErrors);
   
   /// <summary>
   /// Валидатор для чисел
   /// </summary>
-  protected NumberValidator<TNumber> NumberValidator<TNumber>(string propertyName, TNumber value) where TNumber : INumber<TNumber> => new(propertyName, value, ValidationErrors);
+  protected NumberValidator<TNumber> NumberValidator<TNumber>(string propertyName, TNumber? value) where TNumber : INumber<TNumber> => new(propertyName, value, ValidationErrors);
 }

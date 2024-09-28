@@ -6,7 +6,7 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 /// <summary>
 /// Репозиторий для работы с данными студентов
 /// </summary>
-public sealed class StudentRepository : IStudentRepository {
+internal sealed class StudentRepository : IStudentRepository {
   /// <inheritdoc />
   public Task<bool> CheckStudentExistsByEmailAsync(string email, CancellationToken cancellationToken) {
     // TODO заглушка
@@ -21,7 +21,7 @@ public sealed class StudentRepository : IStudentRepository {
       Id = 100,
       Name = createStudentDto.Name,
       AvatarUrl = "",
-      RegistrationDate = DateTime.Now
+      RegistrationDate = DateTime.UtcNow
     });
   }
 }

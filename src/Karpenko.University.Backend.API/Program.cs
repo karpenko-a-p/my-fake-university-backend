@@ -44,7 +44,7 @@ public class Program {
   private static void StartupApplication(WebApplication app) {
     app.UseExceptionHandler(options => {});
 
-    app.UseSwagger();
+    app.UseConfiguredSwagger();
 
     app.UseAuthorization();
     app.UseAuthorization();

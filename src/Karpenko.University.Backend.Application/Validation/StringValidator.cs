@@ -70,7 +70,7 @@ public sealed class StringValidator(string propertyName, string? value, ICollect
   /// Строка не пустая
   /// </summary>
   public StringValidator NotEmpty(string errorMessage = NotEmptyErrorMessage) {
-    if (value == "")
+    if (value is null || value == "")
       validationErrors.Add(new(propertyName, errorMessage));
 
     return this;
