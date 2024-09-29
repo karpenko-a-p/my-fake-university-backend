@@ -2,6 +2,7 @@
 using Karpenko.University.Backend.API.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Converters;
+using Serilog;
 
 namespace Karpenko.University.Backend.API;
 
@@ -51,6 +52,22 @@ internal static class ServiceCollectionExtensions {
   /// </summary>
   internal static IServiceCollection AddExceptionHandlingMiddleware(this IServiceCollection services) {
     services.AddExceptionHandler<ExceptionHandlingMiddleware>();
+
+    return services;
+  }
+
+  /// <summary>
+  /// Добавление логирования
+  /// </summary>
+  internal static IServiceCollection AddLogging(this IServiceCollection services) {
+    services.AddSerilog((_, options) => {
+      options
+        .WriteTo.Console()
+        .WriteTo.File("logs/log-.txt",
+          rollingInterval: RollingInterval.Day,
+          rollOnFileSizeLimit: true,
+          fileSizeLimitBytes: 100 * 1024 * 1024); // 100Mb
+    });
 
     return services;
   }

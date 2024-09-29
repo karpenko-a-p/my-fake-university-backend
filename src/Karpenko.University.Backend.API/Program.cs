@@ -1,6 +1,7 @@
 using Karpenko.University.Backend.Application;
 using Karpenko.University.Backend.Infrastructure;
 using Karpenko.University.Backend.Persistence;
+using Serilog;
 
 namespace Karpenko.University.Backend.API;
 
@@ -27,6 +28,9 @@ public class Program {
     services.AddApplication();
     services.AddInfrastructure();
     services.AddPersistence();
+
+    // Добавление логирования
+    services.AddLogging();
     
     // Конфигурация контроллеров
     services.AddConfiguredControllers();
@@ -43,12 +47,10 @@ public class Program {
   /// </summary>
   private static void StartupApplication(WebApplication app) {
     app.UseExceptionHandler(options => {});
-
+    app.UseSerilogRequestLogging();
     app.UseConfiguredSwagger();
-
     app.UseAuthorization();
     app.UseAuthorization();
-
     app.MapControllers();
     app.Run();
   }

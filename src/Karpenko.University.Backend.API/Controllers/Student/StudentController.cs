@@ -26,8 +26,6 @@ public sealed class StudentController(ILogger<StudentController> logger) : Exten
     [FromBody] CreateStudentContract createStudentContract,
     CancellationToken cancellationToken
   ) {
-    logger.LogInformation(createStudentContract.ToString());
-
     var studentCreatingResult = await createStudentUseCase
       .SetEntryData(createStudentContract.ToCreateStudentEntryData())
       .ExecuteAsync(cancellationToken);

@@ -7,6 +7,7 @@ riderModule.iml
 *.db-shm
 *.db-wal
 *.DotSettings.user
+logs/
 
 # IDEs and editors
 .idea
