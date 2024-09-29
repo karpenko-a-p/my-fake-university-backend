@@ -1,6 +1,9 @@
 ﻿using System.Net.Mime;
+using System.Text;
 using Karpenko.University.Backend.API.Middlewares;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 using Serilog;
 
@@ -68,6 +71,31 @@ internal static class ServiceCollectionExtensions {
           rollOnFileSizeLimit: true,
           fileSizeLimitBytes: 100 * 1024 * 1024); // 100Mb
     });
+
+    return services;
+  }
+
+  /// <summary>
+  /// Добавление аутентификации
+  /// </summary>
+  internal static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
+    var jwtIssuer = configuration["JWT:Issuer"]!;
+    var jwtAudience = configuration["JWT:Audience"]!;
+    var jwtSecret = configuration["JWT:Secret"]!;
+
+    services
+      .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+      .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters {
+          ValidateIssuer = true,
+          ValidateAudience = true,
+          ValidateLifetime = true,
+          ValidateIssuerSigningKey = true,
+          ValidAudience = jwtAudience,
+          ValidIssuer = jwtIssuer,
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+        };
+      });
 
     return services;
   }

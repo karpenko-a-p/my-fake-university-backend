@@ -32,6 +32,9 @@ public class Program {
     // Добавление логирования
     services.AddLogging();
     
+    // Добавление аутентификации
+    services.AddAuth(builder.Configuration);
+    
     // Конфигурация контроллеров
     services.AddConfiguredControllers();
     
