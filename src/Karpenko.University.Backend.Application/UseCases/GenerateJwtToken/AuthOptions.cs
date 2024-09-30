@@ -3,12 +3,24 @@
 /// <summary>
 /// Данные авторизации
 /// </summary>
-/// <param name="Issuer">Издатель токена</param>
-/// <param name="Audience">Кому токен предназначается</param>
-/// <param name="Secret">Секретный ключ</param>
-/// <param name="CookieName">Название куки для хранения токена</param>
-public sealed record AuthOptions(
-  string Issuer,
-  string Audience,
-  string Secret,
-  string CookieName);
+public sealed class AuthOptions {
+  /// <summary>
+  /// Издатель токена
+  /// </summary>
+  public string Issuer { get; set; } = string.Empty;
+
+  /// <summary>
+  /// Кому токен предназначается
+  /// </summary>
+  public string Audience { get; set; } = string.Empty;
+  
+  /// <summary>
+  /// Секретный ключ
+  /// </summary>
+  public string Secret { get; set; } = string.Empty;
+  
+  /// <summary>
+  /// Название куки для хранения токена
+  /// </summary>
+  public string CookieName { get; set; } = string.Empty;
+}

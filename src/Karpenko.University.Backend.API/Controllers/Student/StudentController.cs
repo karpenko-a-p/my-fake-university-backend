@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using Karpenko.University.Backend.API.Controllers.Student.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 
@@ -20,6 +21,7 @@ public sealed class StudentController(ILogger<StudentController> logger) : Exten
   /// <response code="400">Некорректные данные</response>
   [ProducesResponseType<ErrorContract>(StatusCodes.Status400BadRequest)]
   [ProducesResponseType<StudentContract>(StatusCodes.Status200OK)]
+  [Authorize]
   [HttpPost("create-student")]
   public async Task<IActionResult> CreateStudentAsync(
     [FromServices] CreateStudent.UseCase createStudentUseCase,
@@ -29,7 +31,6 @@ public sealed class StudentController(ILogger<StudentController> logger) : Exten
     var studentCreatingResult = await createStudentUseCase
       .SetEntryData(createStudentContract.ToCreateStudentEntryData())
       .ExecuteAsync(cancellationToken);
-
 
     return studentCreatingResult switch {
       CreateStudent.Results.StudentCreated { StudentModel: var studentModel } => Ok(new StudentContract(studentModel)),

@@ -100,12 +100,14 @@ internal static class ServiceCollectionExtensions {
         };
 
         // Получение токена из куки
-        options.Events.OnMessageReceived = context => {
-          if (context.Request.Cookies.ContainsKey(jwtCookieName)) {
-            context.Token = context.Request.Cookies[jwtCookieName];
-          }
+        options.Events = new JwtBearerEvents {
+          OnMessageReceived = context => {
+            if (context.Request.Cookies.ContainsKey(jwtCookieName)) {
+              context.Token = context.Request.Cookies[jwtCookieName];
+            }
 
-          return Task.CompletedTask;
+            return Task.CompletedTask;
+          }
         };
       });
 
