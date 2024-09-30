@@ -40,18 +40,20 @@ public sealed class AuthController : ExtendedControllerBase {
     
     if (studentCreatingResult is not CreateStudent.Results.StudentCreated { StudentModel: var studentModel })
       return CantHandleRequest();
-    
 
     var jwtTokenGenerationResult = generateJwtTokenUseCase
       .SetEntryData(new(studentModel.Id, studentModel.Email))
       .Execute();
 
     if (jwtTokenGenerationResult is GenerateJwtToken.Results.TokenGenerated { Token: var token }) {
-      Response.Cookies.Append(authOptions.CookieName, $"Bearer {token}", new CookieOptions {
+      Response.Cookies.Append(authOptions.CookieName, token, new CookieOptions {
         HttpOnly = true,
+        Secure = true,
+        SameSite = SameSiteMode.Strict,
+        MaxAge = TimeSpan.FromDays(30)
       });
     }
-    
+
     return jwtTokenGenerationResult switch {
       GenerateJwtToken.Results.ValidationError { ValidationResult: var errors } => BadRequest(ErrorContract.ValidationError(errors)),
       GenerateJwtToken.Results.EmptyData => BadRequest(ErrorContract.IncorrectDataType()),
