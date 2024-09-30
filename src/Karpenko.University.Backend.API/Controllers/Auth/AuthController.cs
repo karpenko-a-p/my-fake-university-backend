@@ -13,16 +13,19 @@ namespace Karpenko.University.Backend.API.Controllers.Auth;
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("api/auth/v1")]
 [Route("api/auth/v1")]
-public sealed class AuthController : ExtendedControllerBase {
+public sealed class AuthController(GenerateJwtToken.AuthOptions authOptions) : ExtendedControllerBase {
   /// <summary>
   /// Регистрация студента
   /// </summary>
+  /// <response code="200">Пользователь успешно зарегистрирован</response>
+  /// <response code="400">Ошибка при регистрации пользователя</response>
+  [ProducesResponseType(StatusCodes.Status200OK)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status400BadRequest)]
   [HttpPost("register")]
   public async Task<IActionResult> RegisterAsync(
     [FromBody] RegisterUserContract registerUserContract,
     [FromServices] GenerateJwtToken.UseCase generateJwtTokenUseCase,
     [FromServices] CreateStudent.UseCase createStudentUseCase,
-    GenerateJwtToken.AuthOptions authOptions,
     CancellationToken cancellationToken
   ) {
     var studentCreatingResult = await createStudentUseCase
@@ -52,6 +55,8 @@ public sealed class AuthController : ExtendedControllerBase {
         SameSite = SameSiteMode.Strict,
         MaxAge = TimeSpan.FromDays(30)
       });
+
+      return Ok();
     }
 
     return jwtTokenGenerationResult switch {
