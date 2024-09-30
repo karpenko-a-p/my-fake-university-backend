@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using System.Text;
 using Karpenko.University.Backend.API.Middlewares;
+using Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -82,10 +83,12 @@ internal static class ServiceCollectionExtensions {
     var jwtIssuer = configuration["JWT:Issuer"]!;
     var jwtAudience = configuration["JWT:Audience"]!;
     var jwtSecret = configuration["JWT:Secret"]!;
+    var jwtCookieName = configuration["JWT:CookieName"]!;
 
     services
       .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       .AddJwtBearer(options => {
+        // Настройка параметров для валидации
         options.TokenValidationParameters = new TokenValidationParameters {
           ValidateIssuer = true,
           ValidateAudience = true,
@@ -95,8 +98,26 @@ internal static class ServiceCollectionExtensions {
           ValidIssuer = jwtIssuer,
           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
         };
+
+        // Получение токена из куки
+        options.Events.OnMessageReceived = context => {
+          if (context.Request.Cookies.ContainsKey(jwtCookieName)) {
+            context.Token = context.Request.Cookies[jwtCookieName];
+          }
+
+          return Task.CompletedTask;
+        };
       });
 
+    return services;
+  }
+
+  /// <summary>
+  /// Добавление конфигураций в di контейнер
+  /// </summary>
+  internal static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration) {
+    services.Configure<AuthOptions>(configuration.GetSection("Jwt"));
+    
     return services;
   }
 }

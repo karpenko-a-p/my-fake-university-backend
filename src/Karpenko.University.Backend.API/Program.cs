@@ -32,6 +32,9 @@ public class Program {
     // Добавление логирования
     services.AddLogging();
     
+    // Добавление конфигураций в di контейнер
+    services.AddConfigurations(builder.Configuration);
+
     // Добавление аутентификации
     services.AddAuth(builder.Configuration);
     

@@ -1,7 +1,8 @@
-﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
-using Karpenko.University.Backend.Application.Validation;
+﻿using Karpenko.University.Backend.Application.Validation;
+using static Karpenko.University.Backend.Domain.Student.StudentModel;
+using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 
-namespace Karpenko.University.Backend.Persistence.Validation;
+namespace Karpenko.University.Backend.Infrastructure.Validation;
 
 /// <summary>
 /// Валидатор для данных для создания аккаунта студента
@@ -11,7 +12,7 @@ internal sealed class CreateStudentEntryDataValidator : AbstractValidator<Create
   protected override void ValidateModel(CreateStudent.EntryData model) {
     StringValidator(nameof(model.Email), model.Email)
       .NotEmpty()
-      .LengthLowerThenOrEqual(128)
+      .LengthLowerThenOrEqual(EmailMaxLength)
       .Match(new(@"^\S+@\S+.\S+$"));
 
     StringValidator(nameof(model.Name), model.Name)

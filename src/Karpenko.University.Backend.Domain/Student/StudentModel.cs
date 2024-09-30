@@ -5,6 +5,11 @@
 /// </summary>
 public sealed class StudentModel {
   /// <summary>
+  /// Максимальная длинна почты
+  /// </summary>
+  public const int EmailMaxLength = 128;
+
+  /// <summary>
   /// Идентификатор
   /// </summary>
   public ulong Id { get; set; }

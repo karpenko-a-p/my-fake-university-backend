@@ -1,4 +1,4 @@
-﻿using Karpenko.University.Backend.Application.UseCases.CreateStudent;
+﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using Karpenko.University.Backend.Domain.Student;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;
@@ -6,7 +6,7 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 /// <summary>
 /// Репозиторий для работы с данными студентов
 /// </summary>
-internal sealed class StudentRepository : IStudentRepository {
+internal sealed class StudentRepository : CreateStudent.IStudentRepository {
   /// <inheritdoc />
   public Task<bool> CheckStudentExistsByEmailAsync(string email, CancellationToken cancellationToken) {
     // TODO заглушка
@@ -14,7 +14,7 @@ internal sealed class StudentRepository : IStudentRepository {
   }
 
   /// <inheritdoc />
-  public Task<StudentModel> CreateStudentAsync(CreateStudentDto createStudentDto, CancellationToken cancellationToken) {
+  public Task<StudentModel> CreateStudentAsync(CreateStudent.CreateStudentDto createStudentDto, CancellationToken cancellationToken) {
     // TODO заглушка
     return Task.FromResult(new StudentModel {
       Email = createStudentDto.Email,

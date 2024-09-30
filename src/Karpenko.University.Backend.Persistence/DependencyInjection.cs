@@ -1,7 +1,5 @@
 ﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
-using Karpenko.University.Backend.Application.Validation;
 using Karpenko.University.Backend.Persistence.Repositories;
-using Karpenko.University.Backend.Persistence.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Karpenko.University.Backend.Persistence;
@@ -16,9 +14,6 @@ public static class DependencyInjection {
   public static IServiceCollection AddPersistence(this IServiceCollection services) {
     // Репозитории
     services.AddScoped<CreateStudent.IStudentRepository, StudentRepository>();
-    
-    // Валидаторы
-    services.AddScoped<IValidator<CreateStudent.EntryData>, CreateStudentEntryDataValidator>();
     
     return services;
   }
