@@ -15,9 +15,6 @@ public sealed class UseCase(
 ) : AbstractUseCase<EntryData> {
   /// <inheritdoc />
   public override IResult Execute() {
-    if (EntryData is null)
-      return new Results.EmptyData();
-
     var validationResult = entryDataValidator.Validate(EntryData);
 
     if (validationResult.IsFailure)

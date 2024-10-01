@@ -3,6 +3,7 @@ using Karpenko.University.Backend.API.Controllers.Auth.Contracts;
 using GenerateJwtToken = Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Karpenko.University.Backend.API.Controllers.Auth;
 
@@ -13,7 +14,7 @@ namespace Karpenko.University.Backend.API.Controllers.Auth;
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("api/auth/v1")]
 [Route("api/auth/v1")]
-public sealed class AuthController(GenerateJwtToken.AuthOptions authOptions) : ExtendedControllerBase {
+public sealed class AuthController(IOptions<GenerateJwtToken.AuthOptions> authOptions, ILogger<AuthController> logger) : ExtendedControllerBase {
   /// <summary>
   /// Регистрация студента
   /// </summary>
@@ -37,8 +38,6 @@ public sealed class AuthController(GenerateJwtToken.AuthOptions authOptions) : E
         return BadRequest(ErrorContract.AlreadyExists("Студент с такой почтой уже существует"));
       case CreateStudent.Results.ValidationError { ValidationResult: var errors }:
         return BadRequest(ErrorContract.ValidationError(errors));
-      case CreateStudent.Results.EmptyData:
-        return BadRequest(ErrorContract.IncorrectDataType());
     }
     
     if (studentCreatingResult is not CreateStudent.Results.StudentCreated { StudentModel: var studentModel })
@@ -49,7 +48,7 @@ public sealed class AuthController(GenerateJwtToken.AuthOptions authOptions) : E
       .Execute();
 
     if (jwtTokenGenerationResult is GenerateJwtToken.Results.TokenGenerated { Token: var token }) {
-      Response.Cookies.Append(authOptions.CookieName, token, new CookieOptions {
+      Response.Cookies.Append(authOptions.Value.CookieName, token, new CookieOptions {
         HttpOnly = true,
         Secure = true,
         SameSite = SameSiteMode.Strict,
@@ -61,7 +60,6 @@ public sealed class AuthController(GenerateJwtToken.AuthOptions authOptions) : E
 
     return jwtTokenGenerationResult switch {
       GenerateJwtToken.Results.ValidationError { ValidationResult: var errors } => BadRequest(ErrorContract.ValidationError(errors)),
-      GenerateJwtToken.Results.EmptyData => BadRequest(ErrorContract.IncorrectDataType()),
       _ => CantHandleRequest()
     };
   }

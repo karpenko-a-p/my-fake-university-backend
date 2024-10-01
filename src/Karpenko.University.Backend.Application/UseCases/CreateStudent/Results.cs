@@ -12,11 +12,6 @@ public static class Results {
   /// Аккаунт студента был создан
   /// </summary>
   public sealed record StudentCreated(StudentModel StudentModel) : IResult;
-  
-  /// <summary>
-  /// Данные для создания аккаунта не переданы 
-  /// </summary>
-  public sealed record EmptyData : IResult;
 
   /// <summary>
   /// Ошибка валидации данных для создания аккаунта студента

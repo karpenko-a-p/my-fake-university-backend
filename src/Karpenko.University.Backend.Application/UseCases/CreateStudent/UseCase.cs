@@ -13,9 +13,6 @@ public sealed class UseCase(
 ) : AbstractAsyncUseCase<EntryData> {
   /// <inheritdoc />
   public override async Task<IResult> ExecuteAsync(CancellationToken cancellationToken) {
-    if (EntryData is null)
-      return new Results.EmptyData();
-    
     var validationResult = entryDataValidator.Validate(EntryData);
     
     if (validationResult.IsFailure)

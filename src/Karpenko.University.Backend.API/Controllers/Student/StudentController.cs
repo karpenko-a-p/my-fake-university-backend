@@ -36,7 +36,6 @@ public sealed class StudentController(ILogger<StudentController> logger) : Exten
       CreateStudent.Results.StudentCreated { StudentModel: var studentModel } => Ok(new StudentContract(studentModel)),
       CreateStudent.Results.StudentAlreadyExists => BadRequest(ErrorContract.AlreadyExists("Студент с такой почтой уже существует")),
       CreateStudent.Results.ValidationError { ValidationResult: var errors  } => BadRequest(ErrorContract.ValidationError(errors)),
-      CreateStudent.Results.EmptyData => BadRequest(ErrorContract.IncorrectDataType()),
       _ => CantHandleRequest()
     };
   }
