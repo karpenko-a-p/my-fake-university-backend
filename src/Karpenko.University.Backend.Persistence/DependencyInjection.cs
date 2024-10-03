@@ -1,4 +1,5 @@
 ﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
+using GetStudentByExpression = Karpenko.University.Backend.Application.UseCases.GetStudentByExpression;
 using Karpenko.University.Backend.Persistence.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection {
   public static IServiceCollection AddPersistence(this IServiceCollection services) {
     // Репозитории
     services.AddScoped<CreateStudent.IStudentRepository, StudentRepository>();
+    services.AddScoped<GetStudentByExpression.IStudentRepository, StudentRepository>();
     
     return services;
   }
