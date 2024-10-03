@@ -5,6 +5,7 @@ using Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Serilog;
 
@@ -40,12 +41,33 @@ internal static class ServiceCollectionExtensions {
   /// <summary>
   /// Добавление поддержки Swagger
   /// </summary>
-  internal static IServiceCollection AddSwagger(this IServiceCollection services) {
+  internal static IServiceCollection AddSwagger(this IServiceCollection services, IConfiguration configuration) {
     services.AddSwaggerGenNewtonsoftSupport();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen(options => {
+      // файл с документацией xml
       string xmlPath = Path.Combine(AppContext.BaseDirectory, "Karpenko.University.Backend.API.xml");
       options.IncludeXmlComments(xmlPath);
+      
+      // авторизация
+      options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme {
+        Description = "JWT токен в куках",
+        Name = configuration["JWT:CookieName"]!,
+        In = ParameterLocation.Cookie,
+        Type = SecuritySchemeType.ApiKey
+      });
+
+      options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+          new OpenApiSecurityScheme {
+            Reference = new OpenApiReference {
+              Type = ReferenceType.SecurityScheme,
+              Id = JwtBearerDefaults.AuthenticationScheme
+            }
+          },
+          []
+        }
+      });
     });
 
     return services;

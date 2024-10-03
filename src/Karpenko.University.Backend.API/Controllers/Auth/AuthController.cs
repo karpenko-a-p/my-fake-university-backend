@@ -14,7 +14,7 @@ namespace Karpenko.University.Backend.API.Controllers.Auth;
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("api/auth/v1")]
 [Route("api/auth/v1")]
-public sealed class AuthController(IOptions<GenerateJwtToken.AuthOptions> authOptions, ILogger<AuthController> logger) : ExtendedControllerBase {
+public sealed class AuthController(IOptions<GenerateJwtToken.AuthOptions> authOptions) : ExtendedControllerBase {
   /// <summary>
   /// Регистрация студента
   /// </summary>

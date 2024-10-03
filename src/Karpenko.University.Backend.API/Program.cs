@@ -45,7 +45,7 @@ public class Program {
     services.AddExceptionHandlingMiddleware();
 
     // Добавление поддержки Swagger
-    services.AddSwagger();
+    services.AddSwagger(builder.Configuration);
   }
 
   /// <summary>
