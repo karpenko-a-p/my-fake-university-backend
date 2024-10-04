@@ -4,6 +4,7 @@ using Karpenko.University.Backend.Infrastructure.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using GenerateJwtToken = Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
+using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
 
 namespace Karpenko.University.Backend.Infrastructure;
 
@@ -17,11 +18,13 @@ public static class DependencyInjection {
   public static IServiceCollection AddInfrastructure(this IServiceCollection services) {
     // Сервисы
     services.AddSingleton<CreateStudent.IPasswordService, PasswordService>();
+    services.AddSingleton<VerifyStudentPassword.IPasswordService, PasswordService>();
     services.AddSingleton<GenerateJwtToken.IJwtService, JwtService>();
     
     // Валидаторы
     services.AddSingleton<IValidator<CreateStudent.EntryData>, CreateStudentEntryDataValidator>();
     services.AddSingleton<IValidator<GenerateJwtToken.EntryData>, GenerateJwtTokenEntryDataValidator>();
+    services.AddSingleton<IValidator<VerifyStudentPassword.EntryData>, VerifyStudentPasswordEntryDataValidation>();
 
     return services;
   }

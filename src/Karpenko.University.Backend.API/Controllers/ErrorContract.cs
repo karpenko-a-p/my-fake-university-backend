@@ -32,8 +32,16 @@ public record ErrorContract(
   /// <summary>
   /// Ошибка по причине некорректного формата данных
   /// </summary>
-  public static ErrorContract IncorrectDataType(string errorMessage = "Некорректный формат данных", object? details = null) => new(
-    nameof(IncorrectDataType),
+  public static ErrorContract BadRequest(string errorMessage = "Некорректный формат данных", object? details = null) => new(
+    nameof(BadRequest),
+    errorMessage,
+    details);
+  
+  /// <summary>
+  /// Ошибка по причине ненайденных данных
+  /// </summary>
+  public static ErrorContract NotFound(string errorMessage = "Не найдено", object? details = null) => new(
+    nameof(NotFound),
     errorMessage,
     details);
 }

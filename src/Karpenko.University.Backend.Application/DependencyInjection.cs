@@ -1,6 +1,7 @@
 ﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using GenerateJwtToken = Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 using GetStudentByExpression = Karpenko.University.Backend.Application.UseCases.GetStudentByExpression;
+using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Karpenko.University.Backend.Application;
@@ -16,6 +17,7 @@ public static class DependencyInjection {
     services.AddTransient<CreateStudent.UseCase>();
     services.AddTransient<GenerateJwtToken.UseCase>();
     services.AddTransient<GetStudentByExpression.UseCase>();
+    services.AddTransient<VerifyStudentPassword.UseCase>();
 
     return services;
   }

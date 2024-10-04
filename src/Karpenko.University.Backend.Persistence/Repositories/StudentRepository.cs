@@ -1,5 +1,6 @@
 ﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using GetStudentByExpression = Karpenko.University.Backend.Application.UseCases.GetStudentByExpression;
+using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
 using Karpenko.University.Backend.Domain.Student;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;
@@ -7,7 +8,11 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 /// <summary>
 /// Репозиторий для работы с данными студентов
 /// </summary>
-internal sealed class StudentRepository : CreateStudent.IStudentRepository, GetStudentByExpression.IStudentRepository {
+internal sealed class StudentRepository :
+  CreateStudent.IStudentRepository,
+  GetStudentByExpression.IStudentRepository,
+  VerifyStudentPassword.IStudentRepository
+{
   /// <inheritdoc />
   public Task<bool> CheckStudentExistsByEmailAsync(string email, CancellationToken cancellationToken) {
     // TODO заглушка
@@ -34,5 +39,10 @@ internal sealed class StudentRepository : CreateStudent.IStudentRepository, GetS
     if (candidate is null) return null;
 
     return new();
+  }
+
+  /// <inheritdoc />
+  public async Task<string?> GetStudentPasswordByIdAsync(ulong id, CancellationToken cancellationToken) {
+    return "123456";
   }
 }
