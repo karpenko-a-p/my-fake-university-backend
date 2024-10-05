@@ -1,4 +1,4 @@
-﻿namespace Karpenko.University.Backend.Persistence.Databases;
+﻿namespace Karpenko.University.Backend.Persistence.Database;
 
 /// <summary>
 /// Схемы БД

@@ -8,6 +8,16 @@ public sealed class StudentModel {
   /// Максимальная длинна почты
   /// </summary>
   public const int EmailMaxLength = 128;
+  
+  /// <summary>
+  /// Максимальная длинна ссылки на фото
+  /// </summary>
+  public const int AvatarUrlMaxLength = 255;
+  
+  /// <summary>
+  /// Максимальная длинна имени
+  /// </summary>
+  public const int NameMaxLength = 255;
 
   /// <summary>
   /// Идентификатор

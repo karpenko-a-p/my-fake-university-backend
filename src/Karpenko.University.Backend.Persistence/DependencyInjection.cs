@@ -1,5 +1,5 @@
-﻿using Karpenko.University.Backend.Persistence.Databases;
-using Karpenko.University.Backend.Persistence.Databases.Contexts;
+﻿using Karpenko.University.Backend.Persistence.Database;
+using Karpenko.University.Backend.Persistence.Database.Contexts;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using GetStudentByExpression = Karpenko.University.Backend.Application.UseCases.GetStudentByExpression;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;

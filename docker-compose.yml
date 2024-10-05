@@ -1,18 +1,38 @@
 ﻿version: '3.9'
 
 services:
-  karpenko.university.backend:
-    container_name: karpenko.university.backend
-    build:
-      context: .
-      dockerfile: Karpenko.University.Backend.API/Dockerfile
+#  karpenko.university.backend:
+#    container_name: karpenko.university.backend
+#    build:
+#      context: .
+#      dockerfile: Karpenko.University.Backend.API/Dockerfile
+#    environment:
+#      ASPNETCORE_ENVIRONMENT: Development
+#    networks:
+#      - internal_net
+  
+  database:
+    image: postgres:17.0-alpine
+    container_name: database
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - database_storage:/var/lib/postgresql/data
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
-    networks:
-      - internal_net
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: admin
+      POSTGRES_DB: backend_database
+      PGDATA: /var/lib/postgresql/data/pgdata
       
-networks:
-  internal_net:
-    driver: bridge
-  external_net:
-    driver: bridge
+volumes:
+  database_storage:
+
+#networks:
+#  internal_net:
+#    driver: bridge
+#  database_net:
+#    driver: bridge
+#  external_net:
+#    driver: bridge
+#    external: true
