@@ -20,13 +20,15 @@ public static class DependencyInjection {
   public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
     // Контексты БД
     services.AddDbContextPool<PostgresDbContext>(options => {
-      options.UseNpgsql(configuration.GetConnectionString("Postgres"), npgOptions => {
-        npgOptions.EnableRetryOnFailure(
-          maxRetryCount: 3);
-        npgOptions.MigrationsHistoryTable(
-          tableName: Tables.MigrationsHistory,
-          schema: Schemas.UniversityBackend);
-      });
+      options
+        .UseNpgsql(configuration.GetConnectionString("Postgres"), npgOptions => {
+          npgOptions.EnableRetryOnFailure(
+            maxRetryCount: 3);
+          npgOptions.MigrationsHistoryTable(
+            tableName: Tables.MigrationsHistory,
+            schema: Schemas.UniversityBackend);
+        })
+        .UseSnakeCaseNamingConvention();
     });
     
     // Репозитории

@@ -37,6 +37,7 @@ internal sealed class StudentEntityConfiguration : IEntityTypeConfiguration<Stud
     builder.Property(model => model.RegistrationDate)
       .IsRequired()
       .HasColumnName("registration_date")
-      .HasDefaultValue(DateTime.UtcNow);
+      .HasDefaultValueSql("timezone('utc', now())")
+      .HasColumnType("timestamp without time zone");;
   }
 }
