@@ -23,13 +23,16 @@ public sealed class UseCase(
     
     var hashedPassword = passwordService.HashPassword(EntryData.Password!);
 
-    var createStudentDto = new CreateStudentDto(
-      EntryData.Name!,
-      EntryData.Email!,
-      hashedPassword);
+    var createStudentDto = new CreateStudentDto(EntryData.Name!, EntryData.Email!);
     
-    var studentModel = await studentRepository.CreateStudentAsync(createStudentDto, cancellationToken);
+    var student = await studentRepository.InTransactionAsync(async () => {
+      var studentModel = await studentRepository.CreateStudentAsync(createStudentDto, cancellationToken);
+      
+      await studentRepository.SaveStudentPasswordAsync(studentModel.Id, hashedPassword, cancellationToken);
 
-    return new Results.StudentCreated(studentModel);
+      return studentModel;
+    }, cancellationToken);
+
+    return new Results.StudentCreated(student);
   }
 }

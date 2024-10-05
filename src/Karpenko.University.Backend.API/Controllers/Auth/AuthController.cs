@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using Karpenko.University.Backend.API.Controllers.Auth.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using GenerateJwtToken = Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
@@ -115,6 +116,18 @@ public sealed class AuthController(IOptions<GenerateJwtToken.AuthOptions> authOp
       GenerateJwtToken.Results.ValidationError { ValidationResult: var errors } => BadRequest(ErrorContract.ValidationError(errors)),
       _ => CantHandleRequest()
     };
+  }
+
+  /// <summary>
+  /// Выход из аккаунта
+  /// </summary>
+  /// <response code="200">Успешный выход</response>
+  [ProducesResponseType(StatusCodes.Status200OK)]
+  [HttpPost("logout")]
+  [Authorize]
+  public IActionResult Logout() {
+    Response.Cookies.Delete(authOptions.Value.CookieName);
+    return Ok();
   }
 
   /// <summary>

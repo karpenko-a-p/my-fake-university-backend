@@ -2,33 +2,48 @@
 using GetStudentByExpression = Karpenko.University.Backend.Application.UseCases.GetStudentByExpression;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
 using Karpenko.University.Backend.Domain.Student;
+using Karpenko.University.Backend.Persistence.Database.Contexts;
+using Karpenko.University.Backend.Persistence.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;
 
 /// <summary>
 /// Репозиторий для работы с данными студентов
 /// </summary>
-internal sealed class StudentRepository :
+internal sealed class StudentRepository(PostgresDbContext db) : AbstractRepository<PostgresDbContext>(db),
   CreateStudent.IStudentRepository,
   GetStudentByExpression.IStudentRepository,
   VerifyStudentPassword.IStudentRepository
 {
   /// <inheritdoc />
   public Task<bool> CheckStudentExistsByEmailAsync(string email, CancellationToken cancellationToken) {
-    // TODO заглушка
-    return Task.FromResult(email == "asd@asd.asd");
+    return db.Students.AnyAsync(student => student.Email == email, cancellationToken);
   }
 
   /// <inheritdoc />
-  public Task<StudentModel> CreateStudentAsync(CreateStudent.CreateStudentDto createStudentDto, CancellationToken cancellationToken) {
-    // TODO заглушка
-    return Task.FromResult(new StudentModel {
+  public async Task<StudentModel> CreateStudentAsync(CreateStudent.CreateStudentDto createStudentDto, CancellationToken cancellationToken) {
+    var studentEntity = new StudentEntity {
       Email = createStudentDto.Email,
-      Id = 100,
       Name = createStudentDto.Name,
-      AvatarUrl = "",
-      RegistrationDate = DateTime.UtcNow
-    });
+    };
+
+    await db.Students.AddAsync(studentEntity, cancellationToken);
+    await db.SaveChangesAsync(cancellationToken);
+
+    return new() {
+      Id = studentEntity.Id,
+      AvatarUrl = studentEntity.AvatarUrl ?? string.Empty,
+      RegistrationDate = studentEntity.RegistrationDate,
+      Name = studentEntity.Name,
+      Email = studentEntity.Email,
+    };
+  }
+
+  /// <inheritdoc />
+  public async Task SaveStudentPasswordAsync(ulong studentId, string password, CancellationToken cancellationToken) {
+    await db.StudentsPasswords.AddAsync(new() { StudentId = studentId, Password = password }, cancellationToken);
+    await db.SaveChangesAsync(cancellationToken);
   }
 
   /// <inheritdoc />
@@ -43,6 +58,10 @@ internal sealed class StudentRepository :
 
   /// <inheritdoc />
   public async Task<string?> GetStudentPasswordByIdAsync(ulong id, CancellationToken cancellationToken) {
-    return "123456";
+    var studentPasswordEntity = await db.StudentsPasswords
+      .AsNoTracking()
+      .FirstOrDefaultAsync(model => model.StudentId == id, cancellationToken);
+
+    return studentPasswordEntity?.Password;
   }
 }

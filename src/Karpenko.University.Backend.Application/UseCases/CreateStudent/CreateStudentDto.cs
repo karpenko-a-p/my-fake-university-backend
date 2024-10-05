@@ -5,8 +5,6 @@
 /// </summary>
 /// <param name="Name">Имя</param>
 /// <param name="Email">Почта</param>
-/// <param name="HashedPassword">Хэшированный пароль</param>
 public sealed record CreateStudentDto(
   string Name,
-  string Email,
-  string HashedPassword);
+  string Email);
