@@ -27,7 +27,7 @@ public class Program {
     // Добавление слоев приложения
     services.AddApplication();
     services.AddInfrastructure();
-    services.AddPersistence();
+    services.AddPersistence(builder.Configuration);
 
     // Добавление логирования
     services.AddLogging();
