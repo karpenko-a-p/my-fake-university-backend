@@ -11,11 +11,16 @@ internal sealed class PostgresDbContext(DbContextOptions<PostgresDbContext> opti
   /// Таблица студентов
   /// </summary>
   public DbSet<StudentEntity> Students { get; set; } = null!;
-  
+
   /// <summary>
   /// Таблица паролей студентов
   /// </summary>
   public DbSet<StudentPasswordEntity> StudentsPasswords { get; set; } = null!;
+
+  /// <summary>
+  /// Таблица с правами
+  /// </summary>
+  public DbSet<StudentPasswordEntity> Permissions { get; set; } = null!;
 
   /// <inheritdoc />
   protected override void OnModelCreating(ModelBuilder modelBuilder) {

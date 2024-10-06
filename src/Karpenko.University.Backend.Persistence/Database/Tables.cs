@@ -18,4 +18,9 @@ internal static class Tables {
   /// Таблица с паролями студентов
   /// </summary>
   public const string StudentsPasswords = "students_passwords";
+  
+  /// <summary>
+  /// Таблица с правами доступа
+  /// </summary>
+  public const string Permissions = "permissions";
 }
