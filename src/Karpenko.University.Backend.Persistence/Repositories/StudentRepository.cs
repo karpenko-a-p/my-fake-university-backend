@@ -1,6 +1,6 @@
 ﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
-using GetStudentByExpression = Karpenko.University.Backend.Application.UseCases.GetStudentByExpression;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
+using GetStudentByEmail = Karpenko.University.Backend.Application.UseCases.GetStudentByEmail;
 using Karpenko.University.Backend.Domain.Student;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
 using Karpenko.University.Backend.Persistence.Database.Entities;
@@ -13,8 +13,8 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 /// </summary>
 internal sealed class StudentRepository(PostgresDbContext db) : AbstractRepository<PostgresDbContext>(db),
   CreateStudent.IStudentRepository,
-  GetStudentByExpression.IStudentRepository,
-  VerifyStudentPassword.IStudentRepository
+  VerifyStudentPassword.IStudentRepository,
+  GetStudentByEmail.IStudentRepository
 {
   /// <inheritdoc />
   public Task<bool> CheckStudentExistsByEmailAsync(string email, CancellationToken cancellationToken) {
@@ -47,21 +47,29 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
   }
 
   /// <inheritdoc />
-  public async Task<StudentModel?> GetStudentByExpressionAsync(Func<GetStudentByExpression.IStudentSearchable, bool> expression, CancellationToken cancellationToken) {
-    // TODO заглушка
-    var candidate = Enumerable.Empty<GetStudentByExpression.IStudentSearchable>().FirstOrDefault(expression);
-
-    if (candidate is null) return null;
-
-    return new();
-  }
-
-  /// <inheritdoc />
   public async Task<string?> GetStudentPasswordByIdAsync(ulong id, CancellationToken cancellationToken) {
     var studentPasswordEntity = await db.StudentsPasswords
       .AsNoTracking()
       .FirstOrDefaultAsync(model => model.StudentId == id, cancellationToken);
 
     return studentPasswordEntity?.Password;
+  }
+
+  /// <inheritdoc />
+  public async Task<StudentModel?> GetStudentByEmail(string email, CancellationToken cancellationToken) {
+    var studentEntity = await db.Students
+      .AsNoTracking()
+      .FirstOrDefaultAsync(student => student.Email == email, cancellationToken);
+
+    if (studentEntity is null)
+      return null;
+    
+    return new() {
+      Id = studentEntity.Id,
+      AvatarUrl = studentEntity.AvatarUrl ?? string.Empty,
+      RegistrationDate = studentEntity.RegistrationDate,
+      Name = studentEntity.Name,
+      Email = studentEntity.Email,
+    };
   }
 }

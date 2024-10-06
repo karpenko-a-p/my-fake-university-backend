@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using GenerateJwtToken = Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
-using GetStudentByExpression = Karpenko.University.Backend.Application.UseCases.GetStudentByExpression;
+using GetStudentByEmail = Karpenko.University.Backend.Application.UseCases.GetStudentByEmail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -80,15 +80,15 @@ public sealed class AuthController(IOptions<GenerateJwtToken.AuthOptions> authOp
     [FromBody] LoginUserContract loginUserContract,
     [FromServices] GenerateJwtToken.UseCase generateJwtTokenUseCase,
     [FromServices] VerifyStudentPassword.UseCase verifyStudentPasswordUseCase,
-    [FromServices] GetStudentByExpression.UseCase getStudentByExpressionUseCase,
+    [FromServices] GetStudentByEmail.UseCase getStudentByExpressionUseCase,
     CancellationToken cancellationToken
   ) {
     // Поиск студента (проверка, что существует)
     var studentSearchResult = await getStudentByExpressionUseCase
-      .SetEntryData(GetStudentByExpression.StudentSearchStrategy.ByEmail(loginUserContract.Email!))
+      .SetEntryData(new (loginUserContract.Email))
       .ExecuteAsync(cancellationToken);
 
-    if (studentSearchResult is not GetStudentByExpression.Results.Found { Student: var student })
+    if (studentSearchResult is not GetStudentByEmail.Results.Found { Student: var student })
       return BadRequest(ErrorContract.BadRequest(errorMessage: InvalidLoginOrPassword));
 
     // Сверка паролей

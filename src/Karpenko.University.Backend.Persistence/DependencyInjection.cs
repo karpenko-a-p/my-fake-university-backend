@@ -1,8 +1,8 @@
 ﻿using Karpenko.University.Backend.Persistence.Database;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
-using GetStudentByExpression = Karpenko.University.Backend.Application.UseCases.GetStudentByExpression;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
+using GetStudentByEmail = Karpenko.University.Backend.Application.UseCases.GetStudentByEmail;
 using Karpenko.University.Backend.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +33,7 @@ public static class DependencyInjection {
     
     // Репозитории
     services.AddScoped<CreateStudent.IStudentRepository, StudentRepository>();
-    services.AddScoped<GetStudentByExpression.IStudentRepository, StudentRepository>();
+    services.AddScoped<GetStudentByEmail.IStudentRepository, StudentRepository>();
     services.AddScoped<VerifyStudentPassword.IStudentRepository, StudentRepository>();
     
     return services;
