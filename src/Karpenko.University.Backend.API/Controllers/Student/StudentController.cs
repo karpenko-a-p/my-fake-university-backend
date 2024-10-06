@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using GetStudentById = Karpenko.University.Backend.Application.UseCases.GetStudentById;
+using DeleteStudentById = Karpenko.University.Backend.Application.UseCases.DeleteStudentById;
 
 namespace Karpenko.University.Backend.API.Controllers.Student;
 
@@ -57,22 +58,47 @@ public sealed class StudentController : ExtendedControllerBase {
     var studentSearchResult = await getStudentByIdUseCase
       .SetEntryData(new(studentId))
       .ExecuteAsync(cancellationToken);
-    
-    if (studentSearchResult is not GetStudentById.Results.Found { Student: var student })
-      return NotFound(ErrorContract.NotFound(errorMessage: "Студент не найден"));
 
-    return Ok(new StudentContract(student));
+    return studentSearchResult switch {
+      GetStudentById.Results.Found { Student: var student } => Ok(new StudentContract(student)),
+      GetStudentById.Results.NotFound => NotFound(ErrorContract.NotFound(errorMessage: "Студент не найден")),
+      _ => CantHandleRequest()
+    };
   }
 
   /// <summary>
   /// Удаление студента по идентификатору
   /// </summary>
-  /// <response code="200">Студен удален</response>
-  /// <response code="404">Студен не найден</response>
+  /// <response code="200">Студент удален</response>
+  /// <response code="404">Студент не найден</response>
+  /// <response code="500">Ошибка при удалении</response>
   [ProducesResponseType<ErrorContract>(StatusCodes.Status404NotFound)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status500InternalServerError)]
   [ProducesResponseType<StudentContract>(StatusCodes.Status200OK)]
   [HttpDelete("{id:long:min(0)}")]
-  public async Task<IActionResult> DeleteStudentByIdAsync() {
-    return Ok();
+  public async Task<IActionResult> DeleteStudentByIdAsync(
+    [FromRoute(Name = "id")] ulong studentId,
+    [FromServices] DeleteStudentById.UseCase deleteStudentByIdUseCase,
+    [FromServices] GetStudentById.UseCase getStudentByIdUseCase,
+    CancellationToken cancellationToken
+  ) {
+    var studentSearchResult = await getStudentByIdUseCase
+      .SetEntryData(new(studentId))
+      .ExecuteAsync(cancellationToken);
+    
+    if (studentSearchResult is not GetStudentById.Results.Found { Student: var student })
+      return NotFound(ErrorContract.NotFound(errorMessage: "Студент не найден"));
+
+    var studentDeleteResult = await deleteStudentByIdUseCase
+      .SetEntryData(new(student.Id))
+      .ExecuteAsync(cancellationToken);
+
+    return studentDeleteResult switch {
+      DeleteStudentById.Results.NotDeleted => InternalServerError(new ErrorContract(
+        ErrorCode: nameof(DeleteStudentById.Results.NotDeleted),
+        ErrorMessage: $"Ошибка при удалении аккаунта с идентификатором '{studentId}'")),
+      DeleteStudentById.Results.Deleted => Ok(new StudentContract(student)),
+      _ => CantHandleRequest()
+    };
   }
 }

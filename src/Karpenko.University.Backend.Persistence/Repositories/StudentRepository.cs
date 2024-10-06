@@ -2,6 +2,7 @@
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
 using GetStudentByEmail = Karpenko.University.Backend.Application.UseCases.GetStudentByEmail;
 using GetStudentById = Karpenko.University.Backend.Application.UseCases.GetStudentById;
+using DeleteStudentById = Karpenko.University.Backend.Application.UseCases.DeleteStudentById;
 using Karpenko.University.Backend.Domain.Student;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
 using Karpenko.University.Backend.Persistence.Database.Entities;
@@ -16,7 +17,8 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
   CreateStudent.IStudentRepository,
   VerifyStudentPassword.IStudentRepository,
   GetStudentByEmail.IStudentRepository,
-  GetStudentById.IStudentRepository
+  GetStudentById.IStudentRepository,
+  DeleteStudentById.IStudentRepository
 {
   /// <inheritdoc />
   public Task<bool> CheckStudentExistsByEmailAsync(string email, CancellationToken cancellationToken) {
@@ -67,5 +69,14 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
       .FirstOrDefaultAsync(student => student.Id == id, cancellationToken);
     
     return studentEntity?.ToStudentModel();
+  }
+
+  /// <inheritdoc />
+  public async Task<bool> DeleteStudentByIdAsync(ulong id, CancellationToken cancellationToken) {
+    var deletedRows = await db.Students
+      .Where(student => student.Id == id)
+      .ExecuteDeleteAsync(cancellationToken);
+    
+    return deletedRows > 0;
   }
 }
