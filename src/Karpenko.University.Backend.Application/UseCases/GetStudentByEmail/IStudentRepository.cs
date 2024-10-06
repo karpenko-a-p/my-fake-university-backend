@@ -9,5 +9,5 @@ public interface IStudentRepository {
   /// <summary>
   /// Поиск студента по почте
   /// </summary>
-  Task<StudentModel?> GetStudentByEmail(string email, CancellationToken cancellationToken);
+  Task<StudentModel?> GetStudentByEmailAsync(string email, CancellationToken cancellationToken);
 }

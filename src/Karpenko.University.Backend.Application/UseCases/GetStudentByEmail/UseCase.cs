@@ -11,7 +11,7 @@ public sealed class UseCase(IStudentRepository studentRepository) : AbstractAsyn
     if (EntryData.Email is null)
       return new Results.NotFound();
 
-    var student = await studentRepository.GetStudentByEmail(EntryData.Email, cancellationToken);
+    var student = await studentRepository.GetStudentByEmailAsync(EntryData.Email, cancellationToken);
 
     if (student is null)
       return new Results.NotFound();

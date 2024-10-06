@@ -1,4 +1,6 @@
-﻿namespace Karpenko.University.Backend.Persistence.Database.Entities;
+﻿using Karpenko.University.Backend.Domain.Student;
+
+namespace Karpenko.University.Backend.Persistence.Database.Entities;
 
 /// <summary>
 /// Сущность студента в БД
@@ -33,4 +35,17 @@ internal sealed class StudentEntity {
   /// Навигационное свойство на сущность с паролем
   /// </summary>
   public StudentPasswordEntity Password { get; set; } = new();
+
+  /// <summary>
+  /// Привести данные к формату модели студента
+  /// </summary>
+  public StudentModel ToStudentModel() {
+    return new() {
+      Id = Id,
+      AvatarUrl = AvatarUrl ?? string.Empty,
+      RegistrationDate = RegistrationDate,
+      Name = Name,
+      Email = Email,
+    };
+  }
 }

@@ -31,13 +31,7 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
     await db.Students.AddAsync(studentEntity, cancellationToken);
     await db.SaveChangesAsync(cancellationToken);
 
-    return new() {
-      Id = studentEntity.Id,
-      AvatarUrl = studentEntity.AvatarUrl ?? string.Empty,
-      RegistrationDate = studentEntity.RegistrationDate,
-      Name = studentEntity.Name,
-      Email = studentEntity.Email,
-    };
+    return studentEntity.ToStudentModel();
   }
 
   /// <inheritdoc />
@@ -56,7 +50,7 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
   }
 
   /// <inheritdoc />
-  public async Task<StudentModel?> GetStudentByEmail(string email, CancellationToken cancellationToken) {
+  public async Task<StudentModel?> GetStudentByEmailAsync(string email, CancellationToken cancellationToken) {
     var studentEntity = await db.Students
       .AsNoTracking()
       .FirstOrDefaultAsync(student => student.Email == email, cancellationToken);
@@ -64,12 +58,6 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
     if (studentEntity is null)
       return null;
     
-    return new() {
-      Id = studentEntity.Id,
-      AvatarUrl = studentEntity.AvatarUrl ?? string.Empty,
-      RegistrationDate = studentEntity.RegistrationDate,
-      Name = studentEntity.Name,
-      Email = studentEntity.Email,
-    };
+    return studentEntity.ToStudentModel();
   }
 }
