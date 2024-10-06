@@ -1,6 +1,7 @@
 ﻿using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
 using GetStudentByEmail = Karpenko.University.Backend.Application.UseCases.GetStudentByEmail;
+using GetStudentById = Karpenko.University.Backend.Application.UseCases.GetStudentById;
 using Karpenko.University.Backend.Domain.Student;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
 using Karpenko.University.Backend.Persistence.Database.Entities;
@@ -14,7 +15,8 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 internal sealed class StudentRepository(PostgresDbContext db) : AbstractRepository<PostgresDbContext>(db),
   CreateStudent.IStudentRepository,
   VerifyStudentPassword.IStudentRepository,
-  GetStudentByEmail.IStudentRepository
+  GetStudentByEmail.IStudentRepository,
+  GetStudentById.IStudentRepository
 {
   /// <inheritdoc />
   public Task<bool> CheckStudentExistsByEmailAsync(string email, CancellationToken cancellationToken) {
@@ -54,10 +56,16 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
     var studentEntity = await db.Students
       .AsNoTracking()
       .FirstOrDefaultAsync(student => student.Email == email, cancellationToken);
-
-    if (studentEntity is null)
-      return null;
     
-    return studentEntity.ToStudentModel();
+    return studentEntity?.ToStudentModel();
+  }
+
+  /// <inheritdoc />
+  public async Task<StudentModel?> GetStudentByIdAsync(ulong id, CancellationToken cancellationToken) {
+    var studentEntity = await db.Students
+      .AsNoTracking()
+      .FirstOrDefaultAsync(student => student.Id == id, cancellationToken);
+    
+    return studentEntity?.ToStudentModel();
   }
 }
