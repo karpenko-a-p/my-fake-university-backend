@@ -6,5 +6,5 @@
 /// <param name="Id">Идентификатор студента</param>
 /// <param name="Password">Пароль</param>
 public sealed record EntryData(
-  ulong? Id,
+  long? Id,
   string? Password);

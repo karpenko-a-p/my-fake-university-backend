@@ -4,4 +4,4 @@
 /// Данные для поиска студента по идентификатору
 /// </summary>
 /// <param name="Id">Идентификатор</param>
-public sealed record EntryData(ulong? Id);
+public sealed record EntryData(long? Id);

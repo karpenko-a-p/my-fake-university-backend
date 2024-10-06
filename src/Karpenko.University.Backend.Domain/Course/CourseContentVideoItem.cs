@@ -5,10 +5,10 @@
 /// </summary>
 public sealed class CourseContentVideoItem : ICourseContentItem {
   /// <inheritdoc />
-  public ulong Id { get; set; }
+  public long Id { get; set; }
 
   /// <inheritdoc />
-  public ulong CourseId { get; set; }
+  public long CourseId { get; set; }
 
   /// <inheritdoc />
   public ushort Position { get; set; }
@@ -24,7 +24,7 @@ public sealed class CourseContentVideoItem : ICourseContentItem {
   /// <summary>
   /// Идентификатор видео
   /// </summary>
-  public ulong VideoId { get; set; }
+  public long VideoId { get; set; }
 
   /// <summary>
   /// Постер видео

@@ -9,5 +9,5 @@ public interface IStudentRepository {
   /// <summary>
   /// Поиск студента по идентификатору
   /// </summary>
-  Task<StudentModel?> GetStudentByIdAsync(ulong id, CancellationToken cancellationToken);
+  Task<StudentModel?> GetStudentByIdAsync(long id, CancellationToken cancellationToken);
 }

@@ -7,5 +7,5 @@ public interface IStudentRepository {
   /// <summary>
   /// Получение пароля пользователя по почте 
   /// </summary>
-  Task<string?> GetStudentPasswordByIdAsync(ulong id, CancellationToken cancellationToken);
+  Task<string?> GetStudentPasswordByIdAsync(long id, CancellationToken cancellationToken);
 }

@@ -5,10 +5,10 @@
 /// </summary>
 public sealed class CourseContentTextItem : ICourseContentItem {
   /// <inheritdoc />
-  public ulong Id { get; set; }
+  public long Id { get; set; }
 
   /// <inheritdoc />
-  public ulong CourseId { get; set; }
+  public long CourseId { get; set; }
 
   /// <inheritdoc />
   public ushort Position { get; set; }

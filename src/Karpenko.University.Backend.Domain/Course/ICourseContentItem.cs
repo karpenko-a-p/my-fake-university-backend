@@ -7,12 +7,12 @@ public interface ICourseContentItem {
   /// <summary>
   /// Идентификатор
   /// </summary>
-  ulong Id { get; set; }
+  long Id { get; set; }
   
   /// <summary>
   /// Идентификатор курса к которому относится материал
   /// </summary>
-  ulong CourseId { get; set; }
+  long CourseId { get; set; }
 
   /// <summary>
   /// Порядок данного элемента в этапе курса

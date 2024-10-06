@@ -7,7 +7,7 @@ public sealed class CourseModel {
   /// <summary>
   /// Идентификатор
   /// </summary>
-  public ulong Id { get; set; }
+  public long Id { get; set; }
   
   /// <summary>
   /// Название

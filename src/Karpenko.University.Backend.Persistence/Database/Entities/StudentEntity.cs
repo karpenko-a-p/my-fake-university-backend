@@ -9,7 +9,7 @@ internal sealed class StudentEntity {
   /// <summary>
   /// Идентификатор
   /// </summary>
-  public ulong Id { get; set; }
+  public long Id { get; set; }
 
   /// <summary>
   /// Имя

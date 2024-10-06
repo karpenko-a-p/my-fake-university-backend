@@ -39,13 +39,13 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
   }
 
   /// <inheritdoc />
-  public async Task SaveStudentPasswordAsync(ulong studentId, string password, CancellationToken cancellationToken) {
+  public async Task SaveStudentPasswordAsync(long studentId, string password, CancellationToken cancellationToken) {
     await db.StudentsPasswords.AddAsync(new() { StudentId = studentId, Password = password }, cancellationToken);
     await db.SaveChangesAsync(cancellationToken);
   }
 
   /// <inheritdoc />
-  public async Task<string?> GetStudentPasswordByIdAsync(ulong id, CancellationToken cancellationToken) {
+  public async Task<string?> GetStudentPasswordByIdAsync(long id, CancellationToken cancellationToken) {
     var studentPasswordEntity = await db.StudentsPasswords
       .AsNoTracking()
       .FirstOrDefaultAsync(model => model.StudentId == id, cancellationToken);
@@ -63,7 +63,7 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
   }
 
   /// <inheritdoc />
-  public async Task<StudentModel?> GetStudentByIdAsync(ulong id, CancellationToken cancellationToken) {
+  public async Task<StudentModel?> GetStudentByIdAsync(long id, CancellationToken cancellationToken) {
     var studentEntity = await db.Students
       .AsNoTracking()
       .FirstOrDefaultAsync(student => student.Id == id, cancellationToken);
@@ -72,7 +72,7 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
   }
 
   /// <inheritdoc />
-  public async Task<bool> DeleteStudentByIdAsync(ulong id, CancellationToken cancellationToken) {
+  public async Task<bool> DeleteStudentByIdAsync(long id, CancellationToken cancellationToken) {
     var deletedRows = await db.Students
       .Where(student => student.Id == id)
       .ExecuteDeleteAsync(cancellationToken);

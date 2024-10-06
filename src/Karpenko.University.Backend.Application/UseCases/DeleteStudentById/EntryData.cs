@@ -4,4 +4,4 @@
 /// Данные для удаления данных студента
 /// </summary>
 /// <param name="StudentId">Идентификатор студента</param>
-public sealed record EntryData(ulong StudentId);
+public sealed record EntryData(long StudentId);

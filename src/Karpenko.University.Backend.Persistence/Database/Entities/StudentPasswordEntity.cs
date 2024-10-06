@@ -7,7 +7,7 @@ internal sealed class StudentPasswordEntity {
   /// <summary>
   /// Идентификатор студента
   /// </summary>
-  public ulong StudentId { get; set; }
+  public long StudentId { get; set; }
   
   /// <summary>
   /// Пароль

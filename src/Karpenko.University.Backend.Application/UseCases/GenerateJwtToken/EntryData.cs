@@ -6,5 +6,5 @@
 /// <param name="Id">Идентификатор пользователя</param>
 /// <param name="Email">Почта</param>
 public sealed record EntryData(
-  ulong? Id,
+  long? Id,
   string? Email);

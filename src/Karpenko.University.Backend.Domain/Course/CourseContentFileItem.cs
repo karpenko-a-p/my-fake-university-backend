@@ -7,10 +7,10 @@ namespace Karpenko.University.Backend.Domain.Course;
 /// </summary>
 public sealed class CourseContentFileItem : ICourseContentItem {
   /// <inheritdoc />
-  public ulong Id { get; set; }
+  public long Id { get; set; }
 
   /// <inheritdoc />
-  public ulong CourseId { get; set; }
+  public long CourseId { get; set; }
 
   /// <inheritdoc />
   public ushort Position { get; set; }
@@ -31,7 +31,7 @@ public sealed class CourseContentFileItem : ICourseContentItem {
   /// <summary>
   /// Идентификатор файла
   /// </summary>
-  public ulong FileId { get; set; }
+  public long FileId { get; set; }
   
   /// <summary>
   /// Название файла

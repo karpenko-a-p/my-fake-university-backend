@@ -11,7 +11,7 @@ namespace Karpenko.University.Backend.API.Controllers.Student.Contracts;
 /// <param name="AvatarUrl">Ссылка на фото</param>
 /// <param name="RegistrationDate">Дата регистрации</param>
 public sealed record StudentContract(
-  ulong Id,
+  long Id,
   string Name,
   string Email,
   string AvatarUrl,

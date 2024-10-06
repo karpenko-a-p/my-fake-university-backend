@@ -7,5 +7,5 @@ public interface IStudentRepository {
   /// <summary>
   /// Удаление студента по идентификатору
   /// </summary>
-  Task<bool> DeleteStudentByIdAsync(ulong id, CancellationToken cancellationToken);
+  Task<bool> DeleteStudentByIdAsync(long id, CancellationToken cancellationToken);
 }

@@ -51,7 +51,7 @@ public sealed class StudentController : ExtendedControllerBase {
   [ProducesResponseType<StudentContract>(StatusCodes.Status200OK)]
   [HttpGet("{id:long:min(0)}")]
   public async Task<IActionResult> GetStudentByIdAsync(
-    [FromRoute(Name = "id")] ulong studentId,
+    [FromRoute(Name = "id")] long studentId,
     [FromServices] GetStudentById.UseCase getStudentByIdUseCase,
     CancellationToken cancellationToken
   ) {
@@ -77,7 +77,7 @@ public sealed class StudentController : ExtendedControllerBase {
   [ProducesResponseType<StudentContract>(StatusCodes.Status200OK)]
   [HttpDelete("{id:long:min(0)}")]
   public async Task<IActionResult> DeleteStudentByIdAsync(
-    [FromRoute(Name = "id")] ulong studentId,
+    [FromRoute(Name = "id")] long studentId,
     [FromServices] DeleteStudentById.UseCase deleteStudentByIdUseCase,
     [FromServices] GetStudentById.UseCase getStudentByIdUseCase,
     CancellationToken cancellationToken

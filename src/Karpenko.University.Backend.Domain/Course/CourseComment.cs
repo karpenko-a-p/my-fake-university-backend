@@ -7,17 +7,17 @@ public sealed class CourseComment {
   /// <summary>
   /// Идентификатор
   /// </summary>
-  public ulong Id { get; set; }
+  public long Id { get; set; }
 
   /// <summary>
   /// Идентификатор курса
   /// </summary>
-  public ulong CourseId { get; set; }
+  public long CourseId { get; set; }
 
   /// <summary>
   /// Идентификатор автора комментария
   /// </summary>
-  public ulong AuthorId { get; set; }
+  public long AuthorId { get; set; }
 
   /// <summary>
   /// Содержание комментария

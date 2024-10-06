@@ -7,7 +7,7 @@ public sealed class CourseStepModel {
   /// <summary>
   /// Идентификатор
   /// </summary>
-  public ulong Id { get; set; }
+  public long Id { get; set; }
 
   /// <summary>
   /// Названия этапа курса

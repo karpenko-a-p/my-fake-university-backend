@@ -20,5 +20,5 @@ public interface IStudentRepository : IRepository {
   /// <summary>
   /// Сохранение хэшированного пароля студента в таблицу с паролями
   /// </summary>
-  Task SaveStudentPasswordAsync(ulong studentId, string password, CancellationToken cancellationToken);
+  Task SaveStudentPasswordAsync(long studentId, string password, CancellationToken cancellationToken);
 }
