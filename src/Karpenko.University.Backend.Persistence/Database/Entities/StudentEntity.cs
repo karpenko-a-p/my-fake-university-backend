@@ -34,7 +34,7 @@ internal sealed class StudentEntity {
   /// <summary>
   /// Навигационное свойство на сущность с паролем
   /// </summary>
-  public StudentPasswordEntity Password { get; set; } = new();
+  public StudentPasswordEntity? Password { get; set; }
 
   /// <summary>
   /// Привести данные к формату модели студента

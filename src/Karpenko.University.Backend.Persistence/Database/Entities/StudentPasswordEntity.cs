@@ -17,5 +17,5 @@ internal sealed class StudentPasswordEntity {
   /// <summary>
   /// Навигационное свойство на сущность студента
   /// </summary>
-  public StudentEntity Student { get; set; } = new();
+  public StudentEntity? Student { get; set; }
 }

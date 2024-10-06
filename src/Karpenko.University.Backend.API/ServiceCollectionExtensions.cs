@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using System.Text;
+using Karpenko.University.Backend.API.Controllers;
 using Karpenko.University.Backend.API.Middlewares;
 using Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -121,14 +122,22 @@ internal static class ServiceCollectionExtensions {
           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
         };
 
-        // Получение токена из куки
         options.Events = new JwtBearerEvents {
+          // Получение токена из куки
           OnMessageReceived = context => {
             if (context.Request.Cookies.ContainsKey(jwtCookieName)) {
               context.Token = context.Request.Cookies[jwtCookieName];
             }
 
             return Task.CompletedTask;
+          },
+          // Токен отсутствует или недействителен
+          OnChallenge = async (context) => {
+            context.HandleResponse();
+            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.HttpContext.Response.WriteAsJsonAsync(new ErrorContract(
+              ErrorCode: "Unauthorized",
+              ErrorMessage: "Не авторизован"));
           }
         };
       });
