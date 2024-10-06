@@ -3,6 +3,7 @@ using GenerateJwtToken = Karpenko.University.Backend.Application.UseCases.Genera
 using GetStudentByEmail = Karpenko.University.Backend.Application.UseCases.GetStudentByEmail;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
 using GetStudentById = Karpenko.University.Backend.Application.UseCases.GetStudentById;
+using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
 using DeleteStudentById = Karpenko.University.Backend.Application.UseCases.DeleteStudentById;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,12 +17,14 @@ public static class DependencyInjection {
   /// Метод для добавления слоя к списку сервисов
   /// </summary>
   public static IServiceCollection AddApplication(this IServiceCollection services) {
+    // Сценарии использования
     services.AddTransient<CreateStudent.UseCase>();
     services.AddTransient<GenerateJwtToken.UseCase>();
     services.AddTransient<VerifyStudentPassword.UseCase>();
     services.AddTransient<GetStudentByEmail.UseCase>();
     services.AddTransient<GetStudentById.UseCase>();
     services.AddTransient<DeleteStudentById.UseCase>();
+    services.AddTransient<CheckAccess.UseCase>();
 
     return services;
   }

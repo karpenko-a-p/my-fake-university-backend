@@ -20,7 +20,7 @@ internal sealed class PostgresDbContext(DbContextOptions<PostgresDbContext> opti
   /// <summary>
   /// Таблица с правами
   /// </summary>
-  public DbSet<StudentPasswordEntity> Permissions { get; set; } = null!;
+  public DbSet<PermissionEntity> Permissions { get; set; } = null!;
 
   /// <inheritdoc />
   protected override void OnModelCreating(ModelBuilder modelBuilder) {
