@@ -23,7 +23,7 @@ public static class DependencyInjection {
   /// </summary>
   public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
     // Контексты БД
-    services.AddDbContextPool<PostgresDbContext>(options => {
+    services.AddTriggeredDbContextPool<PostgresDbContext>(options => {
       options
         .UseNpgsql(configuration.GetConnectionString("Postgres"), npgOptions => {
           npgOptions.MigrationsHistoryTable(
@@ -32,7 +32,8 @@ public static class DependencyInjection {
         })
         .UseSnakeCaseNamingConvention();
     });
-    
+    services.AddAssemblyTriggers();
+
     // Репозитории
     services.AddScoped<CreateStudent.IStudentRepository, StudentRepository>();
     services.AddScoped<GetStudentByEmail.IStudentRepository, StudentRepository>();
