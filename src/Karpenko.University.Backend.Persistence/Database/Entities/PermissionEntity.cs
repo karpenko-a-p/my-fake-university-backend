@@ -20,4 +20,15 @@ internal sealed class PermissionEntity {
   /// Тип доступа
   /// </summary>
   public PermissionType PermissionType { get; set; }
+
+  /// <summary>
+  /// Приведение сущности из БД к модели права доступа
+  /// </summary>
+  public PermissionModel ToPermissionModel() {
+    return new() {
+      OwnerId = OwnerId,
+      SubjectId = SubjectId,
+      PermissionType = PermissionType
+    };
+  }
 }
