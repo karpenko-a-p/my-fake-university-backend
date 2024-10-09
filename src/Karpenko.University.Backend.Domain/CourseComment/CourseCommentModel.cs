@@ -1,4 +1,4 @@
-﻿namespace Karpenko.University.Backend.Domain.Course;
+﻿namespace Karpenko.University.Backend.Domain.CourseComment;
 
 /// <summary>
 /// Комментарий к курсу
@@ -8,16 +8,6 @@ public sealed class CourseComment {
   /// Идентификатор
   /// </summary>
   public long Id { get; set; }
-
-  /// <summary>
-  /// Идентификатор курса
-  /// </summary>
-  public long CourseId { get; set; }
-
-  /// <summary>
-  /// Идентификатор автора комментария
-  /// </summary>
-  public long AuthorId { get; set; }
 
   /// <summary>
   /// Содержание комментария

@@ -1,4 +1,4 @@
-﻿namespace Karpenko.University.Backend.Domain.Course;
+﻿namespace Karpenko.University.Backend.Domain.CourseComment;
 
 /// <summary>
 /// Оценка пользователя качества курса
@@ -7,7 +7,7 @@ public enum CourseQuality : byte {
   /// <summary>
   /// Пользователь доволен
   /// </summary>
-  Good,
+  Good = 1,
   
   /// <summary>
   /// Нейтрально

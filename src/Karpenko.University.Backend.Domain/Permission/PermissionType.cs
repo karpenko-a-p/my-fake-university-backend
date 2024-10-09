@@ -7,7 +7,7 @@ public enum PermissionType : byte {
   /// <summary>
   /// Создание
   /// </summary>
-  Create,
+  Create = 1,
 
   /// <summary>
   /// Чтение

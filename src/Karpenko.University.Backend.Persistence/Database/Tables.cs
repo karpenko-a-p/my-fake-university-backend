@@ -23,4 +23,9 @@ internal static class Tables {
   /// Таблица с правами доступа
   /// </summary>
   public const string Permissions = "permissions";
+
+  /// <summary>
+  /// Таблица с комментариями к курсам
+  /// </summary>
+  public const string CoursesComments = "courses_comments";
 }

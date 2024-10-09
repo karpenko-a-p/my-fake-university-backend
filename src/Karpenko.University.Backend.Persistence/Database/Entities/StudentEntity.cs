@@ -37,6 +37,11 @@ internal sealed class StudentEntity {
   public StudentPasswordEntity? Password { get; set; }
 
   /// <summary>
+  /// Навигационное свойство на список комментарией
+  /// </summary>
+  public ICollection<CourseCommentEntity> CoursesComments { get; set; } = [];
+
+  /// <summary>
   /// Привести данные к формату модели студента
   /// </summary>
   public StudentModel ToStudentModel() {
