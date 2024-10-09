@@ -28,4 +28,9 @@ internal static class Tables {
   /// Таблица с комментариями к курсам
   /// </summary>
   public const string CoursesComments = "courses_comments";
+  
+  /// <summary>
+  /// Таблица с тэгами курсов
+  /// </summary>
+  public const string CoursesTags = "courses_tags";
 }

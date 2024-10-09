@@ -1,9 +1,14 @@
-﻿namespace Karpenko.University.Backend.Domain.Course;
+﻿namespace Karpenko.University.Backend.Domain.CourseTag;
 
 /// <summary>
-/// Тэг курса
+/// Модель тэга курса
 /// </summary>
 public sealed class CourseTagModel {
+  /// <summary>
+  /// Максимальная длинна названия тэга
+  /// </summary>
+  public const int NameMaxLength = 128;
+
   /// <summary>
   /// Идентификатор
   /// </summary>

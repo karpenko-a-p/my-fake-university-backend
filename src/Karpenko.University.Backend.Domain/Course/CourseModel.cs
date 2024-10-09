@@ -1,4 +1,6 @@
-﻿namespace Karpenko.University.Backend.Domain.Course;
+﻿using Karpenko.University.Backend.Domain.CourseTag;
+
+namespace Karpenko.University.Backend.Domain.Course;
 
 /// <summary>
 /// Модель курса
