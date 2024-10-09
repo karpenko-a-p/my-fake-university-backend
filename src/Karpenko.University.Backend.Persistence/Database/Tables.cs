@@ -33,4 +33,9 @@ internal static class Tables {
   /// Таблица с тэгами курсов
   /// </summary>
   public const string CoursesTags = "courses_tags";
+
+  /// <summary>
+  /// Таблица с этапами/шагами курсов
+  /// </summary>
+  public const string CoursesSteps = "courses_steps";
 }
