@@ -53,4 +53,9 @@ internal static class Tables {
   /// Таблица связи курсов и тэгов
   /// </summary>
   public const string CourseBindTags = "courses_bind_tags";
+
+  /// <summary>
+  /// Таблица с данными заказов
+  /// </summary>
+  public const string Orders = "orders_data";
 }
