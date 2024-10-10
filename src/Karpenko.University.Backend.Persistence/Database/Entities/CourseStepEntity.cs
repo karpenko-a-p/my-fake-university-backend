@@ -8,6 +8,11 @@ internal sealed class CourseStepEntity {
   /// Идентификатор
   /// </summary>
   public long Id { get; set; }
+  
+  /// <summary>
+  /// Идентификатор курса
+  /// </summary>
+  public long CourseId { get; set; }
 
   /// <summary>
   /// Индекс позиции шага в курсе
@@ -28,4 +33,9 @@ internal sealed class CourseStepEntity {
   /// Примерное время прохождения (в минутах)
   /// </summary>
   public int PassageTime { get; set; }
+  
+  /// <summary>
+  /// Навигация на курс
+  /// </summary>
+  public CourseEntity? Course { get; set; }
 }

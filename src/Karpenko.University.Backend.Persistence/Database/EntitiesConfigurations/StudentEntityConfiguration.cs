@@ -38,6 +38,6 @@ internal sealed class StudentEntityConfiguration : IEntityTypeConfiguration<Stud
       .IsRequired()
       .HasColumnName("registration_date")
       .HasDefaultValueSql("timezone('utc', now())")
-      .HasColumnType("timestamp without time zone");;
+      .HasColumnType("timestamp without time zone");
   }
 }

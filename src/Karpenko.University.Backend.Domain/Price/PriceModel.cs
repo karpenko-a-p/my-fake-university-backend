@@ -10,11 +10,6 @@ public sealed class PriceModel {
   public long Id { get; set; }
 
   /// <summary>
-  /// Идентификатор товара, которому принадлежит стоимость
-  /// </summary>
-  public long ProductId { get; set; }
-
-  /// <summary>
   /// Цена товара
   /// </summary>
   public decimal Price { get; set; }

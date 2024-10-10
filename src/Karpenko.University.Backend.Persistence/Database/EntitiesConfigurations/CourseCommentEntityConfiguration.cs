@@ -16,11 +16,16 @@ internal sealed class CourseCommentEntityConfiguration : IEntityTypeConfiguratio
 
     builder.Property(model => model.Id)
       .HasColumnName("id")
-      .IsRequired();
+      .IsRequired()
+      .ValueGeneratedOnAdd();
 
     builder.Property(model => model.AuthorId)
       .HasColumnName("author_id")
-      .IsRequired();
+      .IsRequired(false);
+    
+    builder.Property(model => model.CourseId)
+      .HasColumnName("course_id")
+      .IsRequired(false);
 
     builder.Property(model => model.Content)
       .HasColumnName("content")
@@ -44,5 +49,12 @@ internal sealed class CourseCommentEntityConfiguration : IEntityTypeConfiguratio
       .HasForeignKey(model => model.AuthorId)
       .OnDelete(DeleteBehavior.SetNull)
       .HasConstraintName("fk_course_comments_author");
+    
+    builder
+      .HasOne(model => model.Course)
+      .WithMany(model => model.Comments)
+      .HasForeignKey(model => model.CourseId)
+      .OnDelete(DeleteBehavior.SetNull)
+      .HasConstraintName("fk_course_comments_course");
   }
 }

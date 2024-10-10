@@ -16,11 +16,8 @@ internal sealed class PriceEntityConfiguration : IEntityTypeConfiguration<PriceE
 
     builder.Property(model => model.Id)
       .HasColumnName("id")
-      .IsRequired();
-    
-    builder.Property(model => model.ProductId)
-      .HasColumnName("product_id")
-      .IsRequired();
+      .IsRequired()
+      .ValueGeneratedOnAdd();
 
     builder.Property(model => model.Price)
       .HasColumnType("numeric(10,2)")

@@ -17,11 +17,17 @@ internal sealed class CourseTagEntityConfiguration : IEntityTypeConfiguration<Co
 
     builder.Property(model => model.Id)
       .HasColumnName("id")
-      .IsRequired();
+      .IsRequired()
+      .ValueGeneratedOnAdd();
 
     builder.Property(model => model.Name)
       .HasColumnName("name")
       .HasMaxLength(NameMaxLength)
       .IsRequired();
+
+    builder
+      .HasMany(model => model.Courses)
+      .WithMany(model => model.Tags)
+      .UsingEntity<CourseBindCourseTagEntity>();
   }
 }

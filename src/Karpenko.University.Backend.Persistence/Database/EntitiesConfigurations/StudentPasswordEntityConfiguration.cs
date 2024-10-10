@@ -16,7 +16,8 @@ internal sealed class StudentPasswordEntityConfiguration : IEntityTypeConfigurat
     
     builder.Property(model => model.StudentId)
       .HasColumnName("student_id")
-      .IsRequired();
+      .IsRequired()
+      .ValueGeneratedOnAdd();
     
     builder.Property(model => model.Password)
       .HasColumnName("password")

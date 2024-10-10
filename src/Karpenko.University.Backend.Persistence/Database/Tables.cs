@@ -43,4 +43,14 @@ internal static class Tables {
   /// Таблица с данными по стоимости товаров
   /// </summary>
   public const string ProductsPrices = "products_prices";
+
+  /// <summary>
+  /// Таблица с данными курсов
+  /// </summary>
+  public const string Courses = "courses_data";
+
+  /// <summary>
+  /// Таблица связи курсов и тэгов
+  /// </summary>
+  public const string CourseBindTags = "courses_bind_tags";
 }

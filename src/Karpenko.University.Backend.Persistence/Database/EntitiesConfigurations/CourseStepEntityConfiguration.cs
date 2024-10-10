@@ -17,7 +17,8 @@ internal sealed class CourseStepEntityConfiguration : IEntityTypeConfiguration<C
 
     builder.Property(model => model.Id)
       .HasColumnName("id")
-      .IsRequired();
+      .IsRequired()
+      .ValueGeneratedOnAdd();
 
     builder.Property(model => model.Name)
       .HasColumnName("name")
@@ -36,5 +37,16 @@ internal sealed class CourseStepEntityConfiguration : IEntityTypeConfiguration<C
     builder.Property(model => model.PositionIndex)
       .HasColumnName("position_index")
       .IsRequired();
+
+    builder.Property(model => model.CourseId)
+      .HasColumnName("course_id")
+      .IsRequired();
+    
+    builder
+      .HasOne(model => model.Course)
+      .WithMany(model => model.Steps)
+      .HasForeignKey(model => model.CourseId)
+      .OnDelete(DeleteBehavior.Cascade)
+      .HasConstraintName("fk_course_steps");
   }
 }

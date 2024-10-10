@@ -15,6 +15,11 @@ internal sealed class CourseCommentEntity {
   /// Идентификатор автора комментария
   /// </summary>
   public long? AuthorId { get; set; }
+  
+  /// <summary>
+  /// Идентификатор курса
+  /// </summary>
+  public long? CourseId { get; set; }
 
   /// <summary>
   /// Содержание комментария
@@ -35,4 +40,9 @@ internal sealed class CourseCommentEntity {
   /// Навигация на втора
   /// </summary>
   public StudentEntity? Author { get; set; }
+  
+  /// <summary>
+  /// Навигация на курс
+  /// </summary>
+  public CourseEntity? Course { get; set; }
 }
