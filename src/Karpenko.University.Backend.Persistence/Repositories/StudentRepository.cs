@@ -5,7 +5,7 @@ using GetStudentById = Karpenko.University.Backend.Application.UseCases.GetStude
 using DeleteStudentById = Karpenko.University.Backend.Application.UseCases.DeleteStudentById;
 using Karpenko.University.Backend.Domain.Student;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
-using Karpenko.University.Backend.Persistence.Database.Entities;
+using Karpenko.University.Backend.Persistence.Database.Entities.Student;
 using Microsoft.EntityFrameworkCore;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;

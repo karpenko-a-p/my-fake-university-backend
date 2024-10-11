@@ -1,4 +1,4 @@
-﻿namespace Karpenko.University.Backend.Persistence.Database.Entities;
+﻿namespace Karpenko.University.Backend.Persistence.Database.Entities.Order;
 
 /// <summary>
 /// Сущность заказа в БД

@@ -1,13 +1,12 @@
-﻿using Karpenko.University.Backend.Persistence.Database.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Karpenko.University.Backend.Persistence.Database.EntitiesConfigurations;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
 
 /// <summary>
 /// Конфигурация сущности коммента к курсу в БД
 /// </summary>
-internal sealed class CourseCommentEntityConfiguration : IEntityTypeConfiguration<CourseCommentEntity> {
+internal sealed class Configuration : IEntityTypeConfiguration<CourseCommentEntity> {
   /// <inheritdoc />
   public void Configure(EntityTypeBuilder<CourseCommentEntity> builder) {
     builder.ToTable(Tables.CoursesComments);
@@ -58,3 +57,4 @@ internal sealed class CourseCommentEntityConfiguration : IEntityTypeConfiguratio
       .HasConstraintName("fk_course_comments_course");
   }
 }
+

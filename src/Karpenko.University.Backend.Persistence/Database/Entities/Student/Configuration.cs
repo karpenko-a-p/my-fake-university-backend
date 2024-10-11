@@ -1,14 +1,13 @@
-﻿using Karpenko.University.Backend.Persistence.Database.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Karpenko.University.Backend.Domain.Student.StudentModel;
 
-namespace Karpenko.University.Backend.Persistence.Database.EntitiesConfigurations;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Student;
 
 /// <summary>
 /// Конфигурация для сущности студента в БД
 /// </summary>
-internal sealed class StudentEntityConfiguration : IEntityTypeConfiguration<StudentEntity> {
+internal class Configuration : IEntityTypeConfiguration<StudentEntity> {
   /// <inheritdoc />
   public void Configure(EntityTypeBuilder<StudentEntity> builder) {
     builder.ToTable(Tables.Students);

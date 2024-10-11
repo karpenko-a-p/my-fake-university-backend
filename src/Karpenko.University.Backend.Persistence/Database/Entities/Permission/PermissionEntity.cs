@@ -1,6 +1,6 @@
 ﻿using Karpenko.University.Backend.Domain.Permission;
 
-namespace Karpenko.University.Backend.Persistence.Database.Entities;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Permission;
 
 /// <summary>
 /// Сущность права доступа

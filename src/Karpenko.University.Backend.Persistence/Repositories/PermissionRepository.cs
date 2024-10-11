@@ -2,7 +2,7 @@
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using Karpenko.University.Backend.Domain.Permission;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
-using Karpenko.University.Backend.Persistence.Database.Entities;
+using Karpenko.University.Backend.Persistence.Database.Entities.Permission;
 using Microsoft.EntityFrameworkCore;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;

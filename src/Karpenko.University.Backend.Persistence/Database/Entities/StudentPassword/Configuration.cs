@@ -1,13 +1,12 @@
-﻿using Karpenko.University.Backend.Persistence.Database.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Karpenko.University.Backend.Persistence.Database.EntitiesConfigurations;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.StudentPassword;
 
 /// <summary>
 /// Конфигурация для таблицы с паролями студентов
 /// </summary>
-internal sealed class StudentPasswordEntityConfiguration : IEntityTypeConfiguration<StudentPasswordEntity> {
+internal sealed class Configuration : IEntityTypeConfiguration<StudentPasswordEntity> {
   /// <inheritdoc />
   public void Configure(EntityTypeBuilder<StudentPasswordEntity> builder) {
     builder.ToTable(Tables.StudentsPasswords);

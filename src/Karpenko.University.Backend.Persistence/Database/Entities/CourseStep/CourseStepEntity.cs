@@ -1,4 +1,6 @@
-﻿namespace Karpenko.University.Backend.Persistence.Database.Entities;
+﻿using Karpenko.University.Backend.Persistence.Database.Entities.Course;
+
+namespace Karpenko.University.Backend.Persistence.Database.Entities.CourseStep;
 
 /// <summary>
 /// Сущность этапа курса в БД

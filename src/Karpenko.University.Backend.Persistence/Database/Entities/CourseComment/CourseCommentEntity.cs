@@ -1,6 +1,8 @@
 ﻿using Karpenko.University.Backend.Domain.CourseComment;
+using Karpenko.University.Backend.Persistence.Database.Entities.Course;
+using Karpenko.University.Backend.Persistence.Database.Entities.Student;
 
-namespace Karpenko.University.Backend.Persistence.Database.Entities;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
 
 /// <summary>
 /// Сущность комментария к курсу в БД

@@ -1,4 +1,7 @@
 ﻿using Karpenko.University.Backend.Persistence.Database.Entities;
+using Karpenko.University.Backend.Persistence.Database.Entities.Permission;
+using Karpenko.University.Backend.Persistence.Database.Entities.Student;
+using Karpenko.University.Backend.Persistence.Database.Entities.StudentPassword;
 using Microsoft.EntityFrameworkCore;
 
 namespace Karpenko.University.Backend.Persistence.Database.Contexts;

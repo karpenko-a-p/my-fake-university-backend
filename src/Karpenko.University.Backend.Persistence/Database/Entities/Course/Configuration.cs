@@ -1,14 +1,14 @@
-﻿using Karpenko.University.Backend.Persistence.Database.Entities;
-using static Karpenko.University.Backend.Domain.Course.CourseModel;
+﻿using Karpenko.University.Backend.Persistence.Database.Entities.CourseBindCourseTag;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static Karpenko.University.Backend.Domain.Course.CourseModel;
 
-namespace Karpenko.University.Backend.Persistence.Database.EntitiesConfigurations;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Course;
 
 /// <summary>
 /// Конфигурация для сущности курса в БД
 /// </summary>
-internal sealed class CourseEntityConfiguration : IEntityTypeConfiguration<CourseEntity> {
+internal sealed class Configuration : IEntityTypeConfiguration<CourseEntity> {
   /// <inheritdoc />
   public void Configure(EntityTypeBuilder<CourseEntity> builder) {
     builder.ToTable(Tables.Courses);
@@ -65,3 +65,4 @@ internal sealed class CourseEntityConfiguration : IEntityTypeConfiguration<Cours
       .HasForeignKey(model => model.CourseId);
   }
 }
+

@@ -1,4 +1,6 @@
-﻿namespace Karpenko.University.Backend.Persistence.Database.Entities;
+﻿using Karpenko.University.Backend.Persistence.Database.Entities.Student;
+
+namespace Karpenko.University.Backend.Persistence.Database.Entities.StudentPassword;
 
 /// <summary>
 /// Сущность для таблицы с паролями студентов

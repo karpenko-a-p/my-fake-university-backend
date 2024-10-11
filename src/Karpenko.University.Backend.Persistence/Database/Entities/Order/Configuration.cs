@@ -1,10 +1,9 @@
 ﻿using Karpenko.University.Backend.Domain.Order;
-using Karpenko.University.Backend.Persistence.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Karpenko.University.Backend.Domain.Order.OrderModel;
 
-namespace Karpenko.University.Backend.Persistence.Database.EntitiesConfigurations;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Order;
 
 /// <summary>
 /// Конфигурация для сущности заказа в БД

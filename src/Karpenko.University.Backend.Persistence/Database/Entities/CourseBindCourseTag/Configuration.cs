@@ -1,8 +1,7 @@
-﻿using Karpenko.University.Backend.Persistence.Database.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Karpenko.University.Backend.Persistence.Database.EntitiesConfigurations;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.CourseBindCourseTag;
 
 /// <summary>
 /// Конфигурация для связи курсов и тэгов к курсам в БД
@@ -26,12 +25,14 @@ internal sealed class CourseBindCourseTagEntityConfiguration : IEntityTypeConfig
       .HasOne(model => model.Course)
       .WithMany(model => model.TagsBindings)
       .HasForeignKey(model => model.CourseId)
-      .OnDelete(DeleteBehavior.Cascade);
+      .OnDelete(DeleteBehavior.Cascade)
+      .HasConstraintName("fk_courses_tags_bind_course");
 
     builder
       .HasOne(model => model.Tag)
       .WithMany(model => model.CoursesBindings)
       .HasForeignKey(model => model.CourseTagId)
-      .OnDelete(DeleteBehavior.Cascade);
+      .OnDelete(DeleteBehavior.Cascade)
+      .HasConstraintName("fk_courses_tags_bind_tag");
   }
 }

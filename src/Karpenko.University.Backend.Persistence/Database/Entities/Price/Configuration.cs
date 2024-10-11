@@ -1,13 +1,12 @@
-﻿using Karpenko.University.Backend.Persistence.Database.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Karpenko.University.Backend.Persistence.Database.EntitiesConfigurations;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Price;
 
 /// <summary>
 /// Конфигурация модели стоимости товара в БД
 /// </summary>
-internal sealed class PriceEntityConfiguration : IEntityTypeConfiguration<PriceEntity> {
+internal sealed class Configuration : IEntityTypeConfiguration<PriceEntity> {
   /// <inheritdoc />
   public void Configure(EntityTypeBuilder<PriceEntity> builder) {
     builder.ToTable(Tables.ProductsPrices);

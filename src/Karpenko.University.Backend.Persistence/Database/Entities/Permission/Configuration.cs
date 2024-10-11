@@ -1,13 +1,12 @@
-﻿using Karpenko.University.Backend.Persistence.Database.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Karpenko.University.Backend.Persistence.Database.EntitiesConfigurations;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Permission;
 
 /// <summary>
 /// Конфигурация для сущности прав доступа
 /// </summary>
-internal sealed class PermissionEntityConfiguration : IEntityTypeConfiguration<PermissionEntity> {
+internal sealed class Configuration : IEntityTypeConfiguration<PermissionEntity> {
   /// <inheritdoc />
   public void Configure(EntityTypeBuilder<PermissionEntity> builder) {
     builder.ToTable(Tables.Permissions);

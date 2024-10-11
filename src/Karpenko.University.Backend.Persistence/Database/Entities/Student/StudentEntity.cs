@@ -1,6 +1,8 @@
 ﻿using Karpenko.University.Backend.Domain.Student;
+using Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
+using Karpenko.University.Backend.Persistence.Database.Entities.StudentPassword;
 
-namespace Karpenko.University.Backend.Persistence.Database.Entities;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Student;
 
 /// <summary>
 /// Сущность студента в БД

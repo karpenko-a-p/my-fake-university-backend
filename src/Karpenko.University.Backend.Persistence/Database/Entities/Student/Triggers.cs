@@ -1,14 +1,13 @@
 ﻿using EntityFrameworkCore.Triggered;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
-using Karpenko.University.Backend.Persistence.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Karpenko.University.Backend.Persistence.Database.Triggers;
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Student;
 
 /// <summary>
 /// Триггер на удаление записи аккаунта студента 
 /// </summary>
-internal sealed class StudentRemoveTrigger(PostgresDbContext dbContext) : IAfterSaveTrigger<StudentEntity> {
+internal sealed class Triggers(PostgresDbContext dbContext) : IAfterSaveTrigger<StudentEntity> {
   /// <inheritdoc />
   public async Task AfterSave(ITriggerContext<StudentEntity> context, CancellationToken cancellationToken) {
     if (context.ChangeType == ChangeType.Deleted) {

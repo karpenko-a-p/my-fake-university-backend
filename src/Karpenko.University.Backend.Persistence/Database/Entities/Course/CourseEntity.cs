@@ -1,4 +1,10 @@
-﻿namespace Karpenko.University.Backend.Persistence.Database.Entities;
+﻿using Karpenko.University.Backend.Persistence.Database.Entities.CourseBindCourseTag;
+using Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
+using Karpenko.University.Backend.Persistence.Database.Entities.CourseStep;
+using Karpenko.University.Backend.Persistence.Database.Entities.CourseTag;
+using Karpenko.University.Backend.Persistence.Database.Entities.Price;
+
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Course;
 
 /// <summary>
 /// Сущность курса в БД

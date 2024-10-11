@@ -1,4 +1,6 @@
-﻿namespace Karpenko.University.Backend.Persistence.Database.Entities;
+﻿using Karpenko.University.Backend.Persistence.Database.Entities.Course;
+
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Price;
 
 /// <summary>
 /// Сущность стоимости товара

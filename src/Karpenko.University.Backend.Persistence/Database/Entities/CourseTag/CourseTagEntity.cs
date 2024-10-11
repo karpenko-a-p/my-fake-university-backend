@@ -1,4 +1,7 @@
-﻿namespace Karpenko.University.Backend.Persistence.Database.Entities;
+﻿using Karpenko.University.Backend.Persistence.Database.Entities.Course;
+using Karpenko.University.Backend.Persistence.Database.Entities.CourseBindCourseTag;
+
+namespace Karpenko.University.Backend.Persistence.Database.Entities.CourseTag;
 
 /// <summary>
 /// Сущность тэга курса
