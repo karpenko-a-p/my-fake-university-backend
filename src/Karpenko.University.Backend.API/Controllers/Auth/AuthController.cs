@@ -80,11 +80,11 @@ public sealed class AuthController(IOptions<GenerateJwtToken.AuthOptions> authOp
     [FromBody] LoginUserContract loginUserContract,
     [FromServices] GenerateJwtToken.UseCase generateJwtTokenUseCase,
     [FromServices] VerifyStudentPassword.UseCase verifyStudentPasswordUseCase,
-    [FromServices] GetStudentByEmail.UseCase getStudentByExpressionUseCase,
+    [FromServices] GetStudentByEmail.UseCase getStudentByEmailUseCase,
     CancellationToken cancellationToken
   ) {
     // Поиск студента (проверка, что существует)
-    var studentSearchResult = await getStudentByExpressionUseCase
+    var studentSearchResult = await getStudentByEmailUseCase
       .SetEntryData(new (loginUserContract.Email))
       .ExecuteAsync(cancellationToken);
 
