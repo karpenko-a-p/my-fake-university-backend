@@ -1,8 +1,7 @@
 ﻿using System.Net.Mime;
-using System.Text;
 using Karpenko.University.Backend.Application.Pagination;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
+using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 
 namespace Karpenko.University.Backend.API.Controllers.Course;
 
@@ -13,31 +12,23 @@ namespace Karpenko.University.Backend.API.Controllers.Course;
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("api/courses/v1")]
 [Route("api/courses/v1")]
-public sealed class CourseController : ExtendedControllerBase {
+public sealed class CourseController([FromServices] ILogger<CourseController> logger) : ExtendedControllerBase {
   /// <summary>
   /// Получение списка курсов
   /// </summary>
-  [HttpGet("cache-test")]
+  [HttpGet]
   public async Task<IActionResult> GetCoursesAsync(
     [FromQuery] PaginationModel pagination,
     CancellationToken cancellationToken,
-    [FromServices] IDistributedCache cache
+    [FromServices] GetCourses.UseCase getCourseUseCase
   ) {
-    const string cacheKey = "date";
-    var data = await cache.GetAsync("date", cancellationToken);
+    var getCoursesResult = await getCourseUseCase
+      .SetEntryData(pagination)
+      .ExecuteAsync(cancellationToken);
 
-    if (data is null) {
-      var currentDate = DateTime.Now.ToString();
-
-      await cache.SetAsync(
-        cacheKey,
-        Encoding.UTF8.GetBytes(currentDate),
-        new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10) },
-        cancellationToken);
-
-      return Ok(currentDate);
-    }
-    
-    return Ok(Encoding.UTF8.GetString(data));
+    return getCoursesResult switch {
+      GetCourses.Results.CoursesCollection { Courses: var courses } => Ok(courses),
+      _ => CantHandleRequest()
+    };
   }
 }

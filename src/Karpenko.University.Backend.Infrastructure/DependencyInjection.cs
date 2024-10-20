@@ -1,4 +1,5 @@
 ﻿using Karpenko.University.Backend.Application.Validation;
+using Karpenko.University.Backend.Infrastructure.Caching;
 using Karpenko.University.Backend.Infrastructure.Services;
 using Karpenko.University.Backend.Infrastructure.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using GenerateJwtToken = Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
+using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 
 namespace Karpenko.University.Backend.Infrastructure;
 
@@ -21,6 +23,7 @@ public static class DependencyInjection {
     services.AddStackExchangeRedisCache(options => {
       options.Configuration = configuration.GetConnectionString("Redis");
     });
+    services.AddSingleton<GetCourses.ICacheService, CourseCacheService>();
 
     // Сервисы
     services.AddSingleton<CreateStudent.IPasswordService, PasswordService>();

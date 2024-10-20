@@ -1,4 +1,5 @@
-﻿using Karpenko.University.Backend.Persistence.Database.Entities.CourseBindCourseTag;
+﻿using Karpenko.University.Backend.Domain.Course;
+using Karpenko.University.Backend.Persistence.Database.Entities.CourseBindCourseTag;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseStep;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseTag;
@@ -69,4 +70,18 @@ internal sealed class CourseEntity {
   /// Навигация на этапы/шаги курса
   /// </summary>
   public ICollection<CourseStepEntity> Steps { get; set; } = [];
+
+  /// <summary>
+  /// Приведение сущности к модели курса
+  /// </summary>
+  public CourseModel ToCourseModel() {
+    return new() {
+      Id = Id,
+      Name = Name,
+      Description = Description,
+      LogoUrl = LogoUrl ?? string.Empty,
+      CreationDate = CreationDate,
+      BoughtCount = BoughtCount,
+    };
+  }
 }

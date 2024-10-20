@@ -1,4 +1,5 @@
 ﻿using Karpenko.University.Backend.Persistence.Database.Entities;
+using Karpenko.University.Backend.Persistence.Database.Entities.Course;
 using Karpenko.University.Backend.Persistence.Database.Entities.Permission;
 using Karpenko.University.Backend.Persistence.Database.Entities.Student;
 using Karpenko.University.Backend.Persistence.Database.Entities.StudentPassword;
@@ -24,6 +25,11 @@ internal sealed class PostgresDbContext(DbContextOptions<PostgresDbContext> opti
   /// Таблица с правами
   /// </summary>
   public DbSet<PermissionEntity> Permissions { get; set; } = null!;
+
+  /// <summary>
+  /// Таблица с курсами
+  /// </summary>
+  public DbSet<CourseEntity> Courses { get; set; } = null!;
 
   /// <inheritdoc />
   protected override void OnModelCreating(ModelBuilder modelBuilder) {

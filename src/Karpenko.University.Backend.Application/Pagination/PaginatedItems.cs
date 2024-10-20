@@ -21,10 +21,10 @@ public sealed record PaginatedItems<TItem>(
   /// <summary>
   /// Есть ли следующая страница
   /// </summary>
-  public bool HasNext => (PageNumber + 1) != TotalPages;
+  public bool HasNext => (PageNumber + 1) < TotalPages;
   
   /// <summary>
   /// Есть ли предыдущая страница
   /// </summary>
-  public bool HasPrev => PageNumber != 0;
+  public bool HasPrev => PageNumber > 0 && PageNumber < TotalPages;
 }

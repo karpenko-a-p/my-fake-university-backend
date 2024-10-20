@@ -24,7 +24,8 @@ internal abstract class AbstractCacheService(IDistributedCache cache) {
     TValue? value,
     TimeSpan? slidingExpiration = null,
     TimeSpan? absoluteExpirationRelativeToNow = null,
-    DateTimeOffset? absoluteExpiration = null
+    DateTimeOffset? absoluteExpiration = null,
+    CancellationToken cancellationToken = default
   ) where TValue : class {
     if (value is null)
       return Task.CompletedTask;
@@ -37,14 +38,14 @@ internal abstract class AbstractCacheService(IDistributedCache cache) {
 
     var serializedValue = JsonConvert.SerializeObject(value, SerializerSettings);
 
-    return cache.SetAsync(key, Encoding.UTF8.GetBytes(serializedValue), cacheOptions);
+    return cache.SetAsync(key, Encoding.UTF8.GetBytes(serializedValue), cacheOptions, cancellationToken);
   }
 
   /// <summary>
   /// Получение значения из кэша
   /// </summary>
-  protected async Task<TValue?> GetAsync<TValue>(string key) where TValue : class {
-    var value = await cache.GetStringAsync(key);
+  protected async Task<TValue?> GetAsync<TValue>(string key, CancellationToken cancellationToken) where TValue : class {
+    var value = await cache.GetStringAsync(key, cancellationToken);
 
     if (value is null)
       return null;

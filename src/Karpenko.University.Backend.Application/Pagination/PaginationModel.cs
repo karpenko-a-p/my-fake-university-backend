@@ -32,6 +32,7 @@ public sealed class PaginationModel {
     get => _pageSize;
     set {
       ArgumentOutOfRangeException.ThrowIfNegative(value);
+      ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 100);
       _pageSize = value;
     }
   }

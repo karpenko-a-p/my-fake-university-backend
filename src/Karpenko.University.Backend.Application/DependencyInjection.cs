@@ -6,6 +6,7 @@ using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using GetStudentById = Karpenko.University.Backend.Application.UseCases.GetStudentById;
 using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
 using DeleteStudentById = Karpenko.University.Backend.Application.UseCases.DeleteStudentById;
+using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Karpenko.University.Backend.Application;
@@ -27,6 +28,7 @@ public static class DependencyInjection {
     services.AddTransient<DeleteStudentById.UseCase>();
     services.AddTransient<CheckAccess.UseCase>();
     services.AddTransient<AddAccess.UseCase>();
+    services.AddTransient<GetCourses.UseCase>();
 
     return services;
   }

@@ -7,6 +7,7 @@ using GetStudentById = Karpenko.University.Backend.Application.UseCases.GetStude
 using DeleteStudentById = Karpenko.University.Backend.Application.UseCases.DeleteStudentById;
 using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
+using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using Karpenko.University.Backend.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -42,6 +43,7 @@ public static class DependencyInjection {
     services.AddScoped<DeleteStudentById.IStudentRepository, StudentRepository>();
     services.AddScoped<CheckAccess.IPermissionRepository, PermissionRepository>();
     services.AddScoped<AddAccess.IPermissionRepository, PermissionRepository>();
+    services.AddScoped<GetCourses.ICourseRepository, CourseRepository>();
     
     return services;
   }
