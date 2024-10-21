@@ -9,6 +9,7 @@ using DeleteStudentById = Karpenko.University.Backend.Application.UseCases.Delet
 using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourseById;
 using GetCoursesTags = Karpenko.University.Backend.Application.UseCases.GetCoursesTags;
+using GetTagsByCourseId = Karpenko.University.Backend.Application.UseCases.GetTagsByCourseId;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Karpenko.University.Backend.Application;
@@ -33,6 +34,7 @@ public static class DependencyInjection {
     services.AddTransient<GetCourses.UseCase>();
     services.AddTransient<GetCourseById.UseCase>();
     services.AddTransient<GetCoursesTags.UseCase>();
+    services.AddTransient<GetTagsByCourseId.UseCase>();
 
     return services;
   }

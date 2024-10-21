@@ -17,6 +17,7 @@ internal sealed class CourseRepository(PostgresDbContext db) : AbstractRepositor
   /// <inheritdoc />
   public async Task<ICollection<CourseModel>> GetCoursesAsync(PaginationModel pagination, CancellationToken cancellationToken) {
     return await db.Courses
+      .AsNoTracking()
       .Paginate(pagination)
       .Select(courseEntity => courseEntity.ToCourseModel())
       .ToListAsync(cancellationToken);
@@ -29,7 +30,10 @@ internal sealed class CourseRepository(PostgresDbContext db) : AbstractRepositor
 
   /// <inheritdoc />
   public async Task<CourseModel?> GetCourseByIdAsync(long id, CancellationToken cancellationToken) {
-    var courseEntity = await db.Courses.FirstOrDefaultAsync(model => model.Id == id, cancellationToken);
+    var courseEntity = await db.Courses
+      .AsNoTracking()
+      .FirstOrDefaultAsync(model => model.Id == id, cancellationToken);
+
     return courseEntity?.ToCourseModel();
   }
 }
