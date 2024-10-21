@@ -22,9 +22,20 @@ public sealed record PaginatedItems<TItem>(
   /// Есть ли следующая страница
   /// </summary>
   public bool HasNext => (PageNumber + 1) < TotalPages;
-  
+
   /// <summary>
   /// Есть ли предыдущая страница
   /// </summary>
   public bool HasPrev => PageNumber > 0 && PageNumber < TotalPages;
+
+  /// <summary>
+  /// Маппинг данных пагинированной коллекции
+  /// </summary>
+  public PaginatedItems<TNewItem> Map<TNewItem>(Func<TItem, TNewItem> mapper) {
+    return new(
+      Items: Items.Select(mapper).ToArray(),
+      TotalItems: TotalItems,
+      PageNumber: PageNumber,
+      PageSize: PageSize);
+  }
 }

@@ -9,6 +9,7 @@ using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourseById;
+using GetCoursesTags = Karpenko.University.Backend.Application.UseCases.GetCoursesTags;
 using Karpenko.University.Backend.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -46,6 +47,7 @@ public static class DependencyInjection {
     services.AddScoped<AddAccess.IPermissionRepository, PermissionRepository>();
     services.AddScoped<GetCourses.ICourseRepository, CourseRepository>();
     services.AddScoped<GetCourseById.ICourseRepository, CourseRepository>();
+    services.AddScoped<GetCoursesTags.ITagRepository, CourseTagRepository>();
     
     return services;
   }

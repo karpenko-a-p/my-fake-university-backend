@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using GenerateJwtToken = Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
+using GetCoursesTags = Karpenko.University.Backend.Application.UseCases.GetCoursesTags;
 using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 
 namespace Karpenko.University.Backend.Infrastructure;
@@ -24,6 +25,7 @@ public static class DependencyInjection {
       options.Configuration = configuration.GetConnectionString("Redis");
     });
     services.AddSingleton<GetCourses.ICacheService, CourseCacheService>();
+    services.AddSingleton<GetCoursesTags.ICacheService, CourseTagCacheService>();
 
     // Сервисы
     services.AddSingleton<CreateStudent.IPasswordService, PasswordService>();

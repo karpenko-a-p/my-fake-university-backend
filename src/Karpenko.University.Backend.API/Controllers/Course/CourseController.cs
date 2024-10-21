@@ -14,7 +14,7 @@ namespace Karpenko.University.Backend.API.Controllers.Course;
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("api/courses/v1")]
 [Route("api/courses/v1")]
-public sealed class CourseController([FromServices] ILogger<CourseController> logger) : ExtendedControllerBase {
+public sealed class CourseController : ExtendedControllerBase {
   /// <summary>
   /// Получение списка курсов
   /// </summary>
@@ -33,7 +33,9 @@ public sealed class CourseController([FromServices] ILogger<CourseController> lo
     if (getCoursesResult is not GetCourses.Results.CoursesCollection { Courses: var courses })
       return CantHandleRequest();
 
-    return Ok(courses);
+    var mappedCourses = courses.Map(course => new CourseContract(course));
+
+    return Ok(mappedCourses);
   }
 
   /// <summary>
