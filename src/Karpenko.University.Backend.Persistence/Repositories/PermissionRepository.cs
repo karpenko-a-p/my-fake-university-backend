@@ -1,5 +1,6 @@
 ﻿using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
+using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using Karpenko.University.Backend.Domain.Permission;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
 using Karpenko.University.Backend.Persistence.Database.Entities.Permission;
@@ -12,7 +13,8 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 /// </summary>
 internal sealed class PermissionRepository(PostgresDbContext db) :
   CheckAccess.IPermissionRepository,
-  AddAccess.IPermissionRepository
+  AddAccess.IPermissionRepository,
+  CreateStudent.IPermissionRepository
 {
   /// <inheritdoc />
   public Task<bool> CheckHasAccessAsync(
@@ -43,5 +45,17 @@ internal sealed class PermissionRepository(PostgresDbContext db) :
     await db.SaveChangesAsync(cancellationToken);
 
     return permission.ToPermissionModel();
+  }
+
+  /// <inheritdoc />
+  public async Task AddPermissionsToStudentAsync(IEnumerable<PermissionModel> permissions, CancellationToken cancellationToken) {
+    var permissionEntities = permissions.Select(model => new PermissionEntity {
+      OwnerId = model.OwnerId,
+      SubjectId = model.SubjectId,
+      PermissionType = model.PermissionType
+    });
+
+    await db.Permissions.AddRangeAsync(permissionEntities, cancellationToken);
+    await db.SaveChangesAsync(cancellationToken);
   }
 }

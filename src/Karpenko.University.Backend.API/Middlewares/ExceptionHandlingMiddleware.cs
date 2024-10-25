@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using static System.Net.HttpStatusCode;
+using Karpenko.University.Backend.API.Controllers;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace Karpenko.University.Backend.API.Middlewares;
 
@@ -13,7 +15,9 @@ public sealed class ExceptionHandlingMiddleware : IExceptionHandler {
     var response = httpContext.Response;
     
     response.StatusCode = StatusCodes.Status500InternalServerError;
-    await response.WriteAsJsonAsync(new { exception.Message, response.StatusCode }, cancellationToken);
+    await response.WriteAsJsonAsync(
+      new ErrorContract(InternalServerError.ToString(), exception.Message),
+      cancellationToken);
     
     return true;
   }

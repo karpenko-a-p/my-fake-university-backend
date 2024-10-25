@@ -1,5 +1,7 @@
 ﻿using Karpenko.University.Backend.Application.Validation;
 using Karpenko.University.Backend.Core.ResultPattern;
+using Karpenko.University.Backend.Domain.Permission;
+using Karpenko.University.Backend.Domain.Student;
 
 namespace Karpenko.University.Backend.Application.UseCases.CreateStudent;
 
@@ -9,7 +11,8 @@ namespace Karpenko.University.Backend.Application.UseCases.CreateStudent;
 public sealed class UseCase(
   IStudentRepository studentRepository,
   IValidator<EntryData> entryDataValidator,
-  IPasswordService passwordService
+  IPasswordService passwordService,
+  IPermissionRepository permissionRepository
 ) : AbstractAsyncUseCase<EntryData> {
   /// <inheritdoc />
   public override async Task<IResult> ExecuteAsync(CancellationToken cancellationToken) {
@@ -28,11 +31,30 @@ public sealed class UseCase(
     var student = await studentRepository.InTransactionAsync(async () => {
       var studentModel = await studentRepository.CreateStudentAsync(createStudentDto, cancellationToken);
       
-      await studentRepository.SaveStudentPasswordAsync(studentModel.Id, hashedPassword, cancellationToken);
+      var passwordSavingTask = studentRepository.SaveStudentPasswordAsync(studentModel.Id, hashedPassword, cancellationToken);
+      
+      var permissionCreatingTask = permissionRepository.AddPermissionsToStudentAsync([
+        GetBaseStudentPermission(studentModel.Id, PermissionType.Delete),
+        GetBaseStudentPermission(studentModel.Id, PermissionType.Update)
+      ], cancellationToken);
+
+      await passwordSavingTask;
+      await permissionCreatingTask;
 
       return studentModel;
     }, cancellationToken);
 
     return new Results.StudentCreated(student);
+  }
+
+  /// <summary>
+  /// Формирование доступа студента к своей же записи
+  /// </summary>
+  private static PermissionModel GetBaseStudentPermission(long studentId, PermissionType permissionType) {
+    return new() {
+      OwnerId = studentId,
+      SubjectId = studentId,
+      PermissionType = permissionType
+    };
   }
 }

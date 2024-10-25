@@ -41,6 +41,7 @@ public static class DependencyInjection {
 
     // Репозитории
     services.AddScoped<CreateStudent.IStudentRepository, StudentRepository>();
+    services.AddScoped<CreateStudent.IPermissionRepository, PermissionRepository>();
     services.AddScoped<GetStudentByEmail.IStudentRepository, StudentRepository>();
     services.AddScoped<VerifyStudentPassword.IStudentRepository, StudentRepository>();
     services.AddScoped<GetStudentById.IStudentRepository, StudentRepository>();
