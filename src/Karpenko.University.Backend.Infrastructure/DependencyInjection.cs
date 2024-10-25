@@ -9,6 +9,7 @@ using GenerateJwtToken = Karpenko.University.Backend.Application.UseCases.Genera
 using VerifyStudentPassword = Karpenko.University.Backend.Application.UseCases.VerifyStudentPassword;
 using GetCoursesTags = Karpenko.University.Backend.Application.UseCases.GetCoursesTags;
 using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
+using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCoursesByTagId;
 
 namespace Karpenko.University.Backend.Infrastructure;
 
@@ -26,6 +27,7 @@ public static class DependencyInjection {
     });
     services.AddSingleton<GetCourses.ICacheService, CourseCacheService>();
     services.AddSingleton<GetCoursesTags.ICacheService, CourseTagCacheService>();
+    services.AddSingleton<GetCoursesByTagId.ICacheService, CourseCacheService>();
 
     // Сервисы
     services.AddSingleton<CreateStudent.IPasswordService, PasswordService>();

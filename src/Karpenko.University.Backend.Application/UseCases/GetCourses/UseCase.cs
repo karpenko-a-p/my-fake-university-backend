@@ -19,7 +19,7 @@ public sealed class UseCase(ICourseRepository courseRepository, ICacheService ca
 
     var paginatedCourses = courses.ToPaginatedCollection(EntryData, coursesCount);
 
-    await cacheService.SetToCacheAsync(paginatedCourses, cancellationToken);
+    cacheService.SetToCacheAsync(paginatedCourses, cancellationToken);
 
     return new Results.CoursesCollection(paginatedCourses);
   }

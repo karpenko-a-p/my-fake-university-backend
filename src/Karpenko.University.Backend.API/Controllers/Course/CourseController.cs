@@ -4,6 +4,7 @@ using Karpenko.University.Backend.Application.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourseById;
+using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCoursesByTagId;
 
 namespace Karpenko.University.Backend.API.Controllers.Course;
 
@@ -41,7 +42,6 @@ public sealed class CourseController : ExtendedControllerBase {
   /// <summary>
   /// Получение курса по идентификатору
   /// </summary>
-  /// <response code="200">Курс</response>
   /// <response code="404">Не найдено</response>
   [ProducesResponseType<CourseContract>(StatusCodes.Status200OK)]
   [ProducesResponseType<ErrorContract>(StatusCodes.Status404NotFound)]
@@ -60,5 +60,29 @@ public sealed class CourseController : ExtendedControllerBase {
       GetCourseById.Results.NotFound => NotFound(ErrorContract.NotFound()),
       _ => CantHandleRequest()
     };
+  }
+  
+  /// <summary>
+  /// Получение списка курсов по тэгу
+  /// </summary>
+  /// <response code="200">Список курсов</response>
+  [ProducesResponseType<PaginatedItems<CourseContract>>(StatusCodes.Status200OK)]
+  [HttpGet("by-tag/{id:min(0):long}")]
+  public async Task<IActionResult> GetCoursesByTagAsync(
+    [FromQuery] PaginationModel pagination,
+    [FromRoute(Name = "id")] long tagId,
+    [FromServices] GetCoursesByTagId.UseCase getCourseByTagIdUseCase,
+    CancellationToken cancellationToken
+  ) {
+    var coursesResult = await getCourseByTagIdUseCase
+      .SetEntryData(new(tagId, pagination))
+      .ExecuteAsync(cancellationToken);
+
+    if (coursesResult is not GetCoursesByTagId.Results.CoursesCollection { Courses: var courses })
+      return CantHandleRequest();
+    
+    var mappedCourses = courses.Map(course => new CourseContract(course));
+    
+    return Ok(mappedCourses);
   }
 }

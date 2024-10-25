@@ -11,6 +11,7 @@ using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourseById;
 using GetCoursesTags = Karpenko.University.Backend.Application.UseCases.GetCoursesTags;
 using GetTagsByCourseId = Karpenko.University.Backend.Application.UseCases.GetTagsByCourseId;
+using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCoursesByTagId;
 using Karpenko.University.Backend.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +51,7 @@ public static class DependencyInjection {
     services.AddScoped<GetCourseById.ICourseRepository, CourseRepository>();
     services.AddScoped<GetCoursesTags.ITagRepository, CourseTagRepository>();
     services.AddScoped<GetTagsByCourseId.ITagRepository, CourseTagRepository>();
+    services.AddScoped<GetCoursesByTagId.ICourseRepository, CourseRepository>();
     
     return services;
   }
