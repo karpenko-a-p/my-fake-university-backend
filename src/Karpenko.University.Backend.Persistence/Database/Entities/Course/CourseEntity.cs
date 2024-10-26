@@ -1,9 +1,7 @@
 ﻿using Karpenko.University.Backend.Domain.Course;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseBindCourseTag;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
-using Karpenko.University.Backend.Persistence.Database.Entities.CourseStep;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseTag;
-using Karpenko.University.Backend.Persistence.Database.Entities.Price;
 
 namespace Karpenko.University.Backend.Persistence.Database.Entities.Course;
 
@@ -42,20 +40,15 @@ internal sealed class CourseEntity {
   public long BoughtCount { get; set; }
 
   /// <summary>
-  /// Идентификатор стоимости для курса
+  /// Цена товара
   /// </summary>
-  public long PriceId { get; set; }
-  
-  /// <summary>
-  /// Навигация на стоимость курса
-  /// </summary>
-  public PriceEntity? Price { get; set; }
+  public decimal Price { get; set; }
 
   /// <summary>
   /// Навигация на тэги курса
   /// </summary>
   public ICollection<CourseTagEntity> Tags { get; set; } = [];
-  
+
   /// <summary>
   /// Навигация на соединение c тэгами
   /// </summary>
@@ -65,11 +58,6 @@ internal sealed class CourseEntity {
   /// Навигация на комментарии к курсу
   /// </summary>
   public ICollection<CourseCommentEntity> Comments { get; set; } = [];
-
-  /// <summary>
-  /// Навигация на этапы/шаги курса
-  /// </summary>
-  public ICollection<CourseStepEntity> Steps { get; set; } = [];
 
   /// <summary>
   /// Приведение сущности к модели курса
@@ -82,6 +70,7 @@ internal sealed class CourseEntity {
       LogoUrl = LogoUrl ?? string.Empty,
       CreationDate = CreationDate,
       BoughtCount = BoughtCount,
+      Price = Price
     };
   }
 }

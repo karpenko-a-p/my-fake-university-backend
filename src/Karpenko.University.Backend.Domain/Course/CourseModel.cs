@@ -38,4 +38,9 @@ public sealed class CourseModel {
   /// Кол-во людей купивших курс
   /// </summary>
   public long BoughtCount { get; set; }
+
+  /// <summary>
+  /// Цена товара
+  /// </summary>
+  public decimal Price { get; set; }
 }

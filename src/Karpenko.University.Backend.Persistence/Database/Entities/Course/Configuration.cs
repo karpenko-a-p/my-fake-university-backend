@@ -19,10 +19,6 @@ internal sealed class Configuration : IEntityTypeConfiguration<CourseEntity> {
       .HasColumnName("id")
       .IsRequired()
       .ValueGeneratedOnAdd();
-    
-    builder.Property(model => model.PriceId)
-      .HasColumnName("price_id")
-      .IsRequired();
 
     builder.Property(model => model.Name)
       .IsRequired()
@@ -47,12 +43,10 @@ internal sealed class Configuration : IEntityTypeConfiguration<CourseEntity> {
       .IsRequired()
       .HasColumnName("bought_count");
 
-    builder
-      .HasOne(model => model.Price)
-      .WithOne(model => model.Course)
-      .HasForeignKey<CourseEntity>(model => model.PriceId)
-      .OnDelete(DeleteBehavior.Cascade)
-      .HasConstraintName("fk_course_price");
+    builder.Property(model => model.Price)
+      .HasColumnName("price")
+      .HasColumnType("numeric(10,2)")
+      .IsRequired();
 
     builder
       .HasMany(model => model.Tags)

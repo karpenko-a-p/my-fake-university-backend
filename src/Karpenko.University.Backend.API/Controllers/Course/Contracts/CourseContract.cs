@@ -11,13 +11,15 @@ namespace Karpenko.University.Backend.API.Controllers.Course.Contracts;
 /// <param name="LogoUrl">Лого курса</param>
 /// <param name="CreationDate">Дата создания</param>
 /// <param name="BoughtCount">Кол-во людей купивших курс</param>
+/// <param name="Price">Стоимость курса</param>
 public sealed record CourseContract(
   long Id,
   string Name,
   string Description,
   string LogoUrl,
   DateTime CreationDate,
-  long BoughtCount
+  long BoughtCount,
+  decimal Price
 ) {
   /// <summary>
   /// Получение контракта из модели курса
@@ -28,6 +30,7 @@ public sealed record CourseContract(
     courseModel.Description,
     courseModel.LogoUrl,
     courseModel.CreationDate,
-    courseModel.BoughtCount
+    courseModel.BoughtCount,
+    courseModel.Price
   ) {}
 }
