@@ -73,10 +73,15 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
 
   /// <inheritdoc />
   public async Task<bool> DeleteStudentByIdAsync(long id, CancellationToken cancellationToken) {
-    var deletedRows = await db.Students
-      .Where(student => student.Id == id)
-      .ExecuteDeleteAsync(cancellationToken);
-    
-    return deletedRows > 0;
+    // При удалении через ExecuteDelete не срабатывают триггеры!
+    var student = await db.Students.FirstOrDefaultAsync(student => student.Id == id, cancellationToken);
+
+    if (student is null)
+      return false;
+
+    db.Students.Remove(student);
+    await db.SaveChangesAsync(cancellationToken);
+
+    return true;
   }
 }

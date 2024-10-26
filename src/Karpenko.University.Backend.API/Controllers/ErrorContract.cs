@@ -44,4 +44,12 @@ public record ErrorContract(
     nameof(NotFound),
     errorMessage,
     details);
+
+  /// <summary>
+  /// Ошибка по причине отсутствия прав
+  /// </summary>
+  public static ErrorContract Forbidden(string errorMessage = "Недостаточно прав", object? details = null) => new(
+    nameof(Forbidden),
+    errorMessage,
+    details);
 }

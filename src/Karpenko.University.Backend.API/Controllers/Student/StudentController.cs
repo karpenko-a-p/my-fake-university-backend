@@ -1,10 +1,12 @@
 ﻿using System.Net.Mime;
 using Karpenko.University.Backend.API.Controllers.Student.Contracts;
+using Karpenko.University.Backend.Domain.Permission;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CreateStudent = Karpenko.University.Backend.Application.UseCases.CreateStudent;
 using GetStudentById = Karpenko.University.Backend.Application.UseCases.GetStudentById;
 using DeleteStudentById = Karpenko.University.Backend.Application.UseCases.DeleteStudentById;
+using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
 
 namespace Karpenko.University.Backend.API.Controllers.Student;
 
@@ -70,16 +72,20 @@ public sealed class StudentController : ExtendedControllerBase {
   /// Удаление студента по идентификатору
   /// </summary>
   /// <response code="200">Студент удален</response>
+  /// <response code="403">Недостаточно прав</response>
   /// <response code="404">Студент не найден</response>
   /// <response code="500">Ошибка при удалении</response>
   [ProducesResponseType<ErrorContract>(StatusCodes.Status404NotFound)]
   [ProducesResponseType<ErrorContract>(StatusCodes.Status500InternalServerError)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status403Forbidden)]
   [ProducesResponseType<StudentContract>(StatusCodes.Status200OK)]
+  [Authorize]
   [HttpDelete("{id:long:min(0)}")]
   public async Task<IActionResult> DeleteStudentByIdAsync(
     [FromRoute(Name = "id")] long studentId,
     [FromServices] DeleteStudentById.UseCase deleteStudentByIdUseCase,
     [FromServices] GetStudentById.UseCase getStudentByIdUseCase,
+    [FromServices] CheckAccess.UseCase checkAccessUseCase,
     CancellationToken cancellationToken
   ) {
     var studentSearchResult = await getStudentByIdUseCase
@@ -88,6 +94,13 @@ public sealed class StudentController : ExtendedControllerBase {
     
     if (studentSearchResult is not GetStudentById.Results.Found { Student: var student })
       return NotFound(ErrorContract.NotFound(errorMessage: "Студент не найден"));
+
+    var checkAccessResult = await checkAccessUseCase
+      .SetEntryData(new (studentId, studentId, PermissionType.Delete))
+      .ExecuteAsync(cancellationToken);
+    
+    if (checkAccessResult is not CheckAccess.Results.HasAccess)
+      return Forbidden(ErrorContract.Forbidden());
 
     var studentDeleteResult = await deleteStudentByIdUseCase
       .SetEntryData(new(student.Id))

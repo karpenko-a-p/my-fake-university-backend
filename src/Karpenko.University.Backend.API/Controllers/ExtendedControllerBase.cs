@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Karpenko.University.Backend.API.Controllers;
 
@@ -10,15 +11,22 @@ public abstract class ExtendedControllerBase : ControllerBase {
   /// Результат с внутренней ошибкой сервера
   /// </summary>
   protected IActionResult InternalServerError(object? data) {
-    return StatusCode(500, data);
+    return StatusCode((int)HttpStatusCode.InternalServerError, data);
   }
 
   /// <summary>
   /// Не удалось корректно обработать запрос
   /// </summary>
   protected IActionResult CantHandleRequest(string errorMessage = "Не удалось корректно обработать запрос") {
-    return StatusCode(500, new ErrorContract(
+    return StatusCode((int)HttpStatusCode.InternalServerError, new ErrorContract(
         nameof(CantHandleRequest),
         errorMessage));
+  }
+  
+  /// <summary>
+  /// Недостаточно прав
+  /// </summary>
+  protected IActionResult Forbidden(object? data) {
+    return StatusCode((int)HttpStatusCode.Forbidden, data);
   }
 }
