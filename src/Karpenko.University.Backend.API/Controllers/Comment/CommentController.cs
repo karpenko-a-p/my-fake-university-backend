@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
 using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
+using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
+using DeleteCommentById = Karpenko.University.Backend.Application.UseCases.DeleteCommentById;
 using Results = Karpenko.University.Backend.Application.Validation.Results;
 
 namespace Karpenko.University.Backend.API.Controllers.Comment;
@@ -57,42 +59,82 @@ public sealed class CommentController : ExtendedControllerBase {
     [FromBody] CreateCommentContract createCommentContract,
     [FromServices] CheckAccess.UseCase checkAccessUseCase,
     [FromServices] CreateComment.UseCase createCommentUseCase,
+    [FromServices] AddAccess.UseCase addAccessUseCase,
     CancellationToken cancellationToken
   ) {
+    var studentId = GetClaimId();
+
+    // Проверка прав, что есть доступ курсу для которого пишется коммент
     var checkAccessResult = await checkAccessUseCase
-      .SetEntryData(new(
-        GetClaimId(),
-        createCommentContract.CourseId,
-        PermissionType.Read))
+      .SetEntryData(new(studentId, createCommentContract.CourseId, PermissionType.Read))
       .ExecuteAsync(cancellationToken);
 
     if (checkAccessResult is CheckAccess.Results.NoAccess)
       return Forbidden(ErrorContract.Forbidden());
 
+    // Создание комментария
     var createCommentResult = await createCommentUseCase
       .SetEntryData(new(
         createCommentContract.CourseId,
-        GetClaimId(),
+        studentId,
         createCommentContract.Content,
         createCommentContract.Quality))
       .ExecuteAsync(cancellationToken);
+
+    if (createCommentResult is not CreateComment.Results.Created { Comment: var comment })
+      return createCommentResult switch {
+        CreateComment.Results.CourseNotFound => NotFound(ErrorContract.NotFound($"Курс с идентификатором {createCommentContract.CourseId} не найден")),
+        Results.ValidationFailure { ValidationResult: var validationResult } => BadRequest(ErrorContract.ValidationError(validationResult)),
+        _ => CantHandleRequest()
+      };
     
-    return createCommentResult switch {
-      CreateComment.Results.Created { Comment: var comment } => Ok(comment),
-      CreateComment.Results.CourseNotFound => NotFound(ErrorContract.NotFound($"Курс с идентификатором {createCommentContract.CourseId} не найден")),
-      Results.ValidationFailure { ValidationResult: var validationResult } => BadRequest(ErrorContract.ValidationError(validationResult)),
-      _ => CantHandleRequest()
-    };
+    // Предоставление доступа
+    var addAccessResult = await addAccessUseCase
+      .SetEntryData(new(studentId, comment.Id, PermissionType.Delete))
+      .ExecuteAsync(cancellationToken);
+    
+    if (addAccessResult is not AddAccess.Results.Success)
+      return BadRequest(ErrorContract.BadRequest());
+    
+    return Ok(new CommentContract(comment));
   }
 
   /// <summary>
   /// Удаление комментария по идентификатору
   /// </summary>
+  /// <response code="200">Комментарий удален</response>
+  /// <response code="403">Недостаточно прав</response>
+  /// <response code="404">Комментарий не найден</response>
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status404NotFound)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status403Forbidden)]
+  [ProducesResponseType<CommentContract>(StatusCodes.Status200OK)]
+  [Authorize]
   [HttpDelete("{commentId:long:min(0)}")]
   public async Task<IActionResult> DeleteCommentByIdAsync(
     [FromRoute(Name = "commentId")] long commentId,
+    [FromServices] CheckAccess.UseCase checkAccessUseCase,
+    [FromServices] DeleteCommentById.UseCase deleteCommentByIdUseCase,
     CancellationToken cancellationToken
   ) {
-    return Ok();
+    var studentId = GetClaimId();
+
+    // Проверка доступа
+    var checkAccessResult = await checkAccessUseCase
+      .SetEntryData(new(studentId, commentId, PermissionType.Delete))
+      .ExecuteAsync(cancellationToken);
+
+    if (checkAccessResult is not CheckAccess.Results.HasAccess)
+      return Forbidden(ErrorContract.Forbidden());
+    
+    // Удаление комментария
+    var deleteResult = await deleteCommentByIdUseCase
+      .SetEntryData(studentId.GetValueOrDefault())
+      .ExecuteAsync(cancellationToken);
+
+    return deleteResult switch {
+      DeleteCommentById.Results.Deleted { Comment: var comment } => Ok(new CommentContract(comment)),
+      DeleteCommentById.Results.NotFound => NotFound(ErrorContract.NotFound($"Не найден комментарий с идентификатором {commentId}")),
+      _ => CantHandleRequest()
+    };
   }
 }

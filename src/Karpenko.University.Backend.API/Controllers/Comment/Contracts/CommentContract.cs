@@ -13,4 +13,14 @@ public sealed record CommentContract(
   long Id,
   string Content,
   CourseQuality Quality,
-  DateTime CreationDate);
+  DateTime CreationDate
+) {
+  /// <summary>
+  /// Преобразование модели комментария к контракту
+  /// </summary>
+  public CommentContract(CourseCommentModel comment) : this(
+    comment.Id,
+    comment.Content,
+    comment.Quality,
+    comment.CreationDate) {}
+}

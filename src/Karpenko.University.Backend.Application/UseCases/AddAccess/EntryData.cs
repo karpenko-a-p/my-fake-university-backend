@@ -9,6 +9,6 @@ namespace Karpenko.University.Backend.Application.UseCases.AddAccess;
 /// <param name="SubjectId">Права на что</param>
 /// <param name="PermissionType">Тип прав</param>
 public sealed record EntryData(
-  long OwnerId,
-  long SubjectId,
+  long? OwnerId,
+  long? SubjectId,
   PermissionType PermissionType);

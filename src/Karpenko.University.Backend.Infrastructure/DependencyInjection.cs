@@ -12,6 +12,7 @@ using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCoursesByTagId;
 using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
 using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
+using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 
 namespace Karpenko.University.Backend.Infrastructure;
 
@@ -35,13 +36,14 @@ public static class DependencyInjection {
     services.AddSingleton<CreateStudent.IPasswordService, PasswordService>();
     services.AddSingleton<VerifyStudentPassword.IPasswordService, PasswordService>();
     services.AddSingleton<GenerateJwtToken.IJwtService, JwtService>();
-    
+
     // Валидаторы
     services.AddSingleton<IValidator<CreateStudent.EntryData>, CreateStudentEntryDataValidator>();
     services.AddSingleton<IValidator<GenerateJwtToken.EntryData>, GenerateJwtTokenEntryDataValidator>();
     services.AddSingleton<IValidator<VerifyStudentPassword.EntryData>, VerifyStudentPasswordEntryDataValidation>();
     services.AddSingleton<IValidator<CheckAccess.EntryData>, CheckAccessEntryDataValidator>();
     services.AddSingleton<IValidator<CreateComment.EntryData>, CreateCommentEntryDataValidator>();
+    services.AddSingleton<IValidator<AddAccess.EntryData>, AddAccessEntryDataValidator>();
 
     return services;
   }
