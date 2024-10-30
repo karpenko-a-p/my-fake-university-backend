@@ -13,6 +13,7 @@ using GetTagsByCourseId = Karpenko.University.Backend.Application.UseCases.GetTa
 using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCoursesByTagId;
 using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
 using DeleteCommentById = Karpenko.University.Backend.Application.UseCases.DeleteCommentById;
+using GetCommentsByAuthorId = Karpenko.University.Backend.Application.UseCases.GetCommentsByAuthorId;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Karpenko.University.Backend.Application;
@@ -41,6 +42,7 @@ public static class DependencyInjection {
     services.AddTransient<GetCoursesByTagId.UseCase>();
     services.AddTransient<CreateComment.UseCase>();
     services.AddTransient<DeleteCommentById.UseCase>();
+    services.AddTransient<GetCommentsByAuthorId.UseCase>();
 
     return services;
   }

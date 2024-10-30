@@ -1,9 +1,11 @@
-﻿using Karpenko.University.Backend.Domain.CourseComment;
+﻿using Karpenko.University.Backend.Application.Pagination;
+using Karpenko.University.Backend.Domain.CourseComment;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
 using Microsoft.EntityFrameworkCore;
 using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
 using DeleteCommentById = Karpenko.University.Backend.Application.UseCases.DeleteCommentById;
+using GetCommentsByAuthorId = Karpenko.University.Backend.Application.UseCases.GetCommentsByAuthorId;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;
 
@@ -12,7 +14,8 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 /// </summary>
 internal sealed class CommentRepository(PostgresDbContext db) : AbstractRepository<PostgresDbContext>(db),
   CreateComment.ICommentRepository,
-  DeleteCommentById.ICommentRepository
+  DeleteCommentById.ICommentRepository,
+  GetCommentsByAuthorId.ICommentRepository
 {
   /// <inheritdoc />
   public async Task<CourseCommentModel> CreateCommentAsync(CreateComment.CreateCommentDto createCommentDto, CancellationToken cancellationToken) {
@@ -43,5 +46,20 @@ internal sealed class CommentRepository(PostgresDbContext db) : AbstractReposito
     await db.Comments
       .Where(comment => comment.Id == id)
       .ExecuteDeleteAsync(cancellationToken);
+  }
+
+  /// <inheritdoc />
+  public async Task<ICollection<CourseCommentModel>> GetCommentsByAuthorIdAsync(long authorId, PaginationModel pagination, CancellationToken cancellationToken) {
+    return await db.Comments
+      .AsNoTracking()
+      .Where(comment => comment.AuthorId == authorId)
+      .Paginate(pagination)
+      .Select(comment => comment.ToCourseCommentModel())
+      .ToListAsync(cancellationToken);
+  }
+
+  /// <inheritdoc />
+  public Task<int> GetCommentsCountByAuthorIdAsync(long authorId, CancellationToken cancellationToken) {
+    return db.Comments.CountAsync(comment => comment.AuthorId == authorId, cancellationToken);
   }
 }

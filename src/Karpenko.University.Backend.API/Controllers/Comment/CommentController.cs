@@ -8,6 +8,7 @@ using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess
 using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using DeleteCommentById = Karpenko.University.Backend.Application.UseCases.DeleteCommentById;
+using GetCommentsByAuthorId = Karpenko.University.Backend.Application.UseCases.GetCommentsByAuthorId;
 using Results = Karpenko.University.Backend.Application.Validation.Results;
 
 namespace Karpenko.University.Backend.API.Controllers.Comment;
@@ -35,13 +36,25 @@ public sealed class CommentController : ExtendedControllerBase {
   /// <summary>
   /// Получение комментариев написанных определенным человеком
   /// </summary>
+  /// <response code="200">Список комментариев</response>
+  [ProducesResponseType<PaginatedItems<CommentContract>>(StatusCodes.Status200OK)]
   [HttpGet("by-owner/{ownerId:long:min(0)}")]
   public async Task<IActionResult> GetCommentsByOwnerIdAsync(
     [FromRoute(Name = "ownerId")] long ownerId,
     [FromQuery] PaginationModel pagination,
+    [FromServices] GetCommentsByAuthorId.UseCase getCommentsByAuthorId,
     CancellationToken cancellationToken
   ) {
-    return Ok();
+    var commentsResult = await getCommentsByAuthorId
+      .SetEntryData(new(ownerId, pagination))
+      .ExecuteAsync(cancellationToken);
+
+    if (commentsResult is not GetCommentsByAuthorId.Results.CommentsCollection { Comments: var comments })
+      return CantHandleRequest();
+
+    var mappedComments = comments.Map(comment => new CommentContract(comment));
+
+    return Ok(mappedComments);
   }
 
   /// <summary>
