@@ -1,6 +1,12 @@
 ﻿using System.Net.Mime;
+using Karpenko.University.Backend.API.Controllers.Comment.Contracts;
 using Karpenko.University.Backend.Application.Pagination;
+using Karpenko.University.Backend.Domain.Permission;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
+using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
+using Results = Karpenko.University.Backend.Application.Validation.Results;
 
 namespace Karpenko.University.Backend.API.Controllers.Comment;
 
@@ -39,11 +45,44 @@ public sealed class CommentController : ExtendedControllerBase {
   /// <summary>
   /// Создание нового комментария
   /// </summary>
+  /// <response code="200">Новый комментарий</response>
+  /// <response code="400">Ошибка валидации</response>
+  /// <response code="403">Недостаточно прав</response>
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status403Forbidden)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status400BadRequest)]
+  [ProducesResponseType<CommentContract>(StatusCodes.Status200OK)]
   [HttpPost]
+  [Authorize]
   public async Task<IActionResult> CreateCommentAsync(
+    [FromBody] CreateCommentContract createCommentContract,
+    [FromServices] CheckAccess.UseCase checkAccessUseCase,
+    [FromServices] CreateComment.UseCase createCommentUseCase,
     CancellationToken cancellationToken
   ) {
-    return Ok();
+    var checkAccessResult = await checkAccessUseCase
+      .SetEntryData(new(
+        GetClaimId(),
+        createCommentContract.CourseId,
+        PermissionType.Read))
+      .ExecuteAsync(cancellationToken);
+
+    if (checkAccessResult is CheckAccess.Results.NoAccess)
+      return Forbidden(ErrorContract.Forbidden());
+
+    var createCommentResult = await createCommentUseCase
+      .SetEntryData(new(
+        createCommentContract.CourseId,
+        GetClaimId(),
+        createCommentContract.Content,
+        createCommentContract.Quality))
+      .ExecuteAsync(cancellationToken);
+    
+    return createCommentResult switch {
+      CreateComment.Results.Created { Comment: var comment } => Ok(comment),
+      CreateComment.Results.CourseNotFound => NotFound(ErrorContract.NotFound($"Курс с идентификатором {createCommentContract.CourseId} не найден")),
+      Results.ValidationFailure { ValidationResult: var validationResult } => BadRequest(ErrorContract.ValidationError(validationResult)),
+      _ => CantHandleRequest()
+    };
   }
 
   /// <summary>

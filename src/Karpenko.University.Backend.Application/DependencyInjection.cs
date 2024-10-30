@@ -11,6 +11,7 @@ using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourse
 using GetCoursesTags = Karpenko.University.Backend.Application.UseCases.GetCoursesTags;
 using GetTagsByCourseId = Karpenko.University.Backend.Application.UseCases.GetTagsByCourseId;
 using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCoursesByTagId;
+using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Karpenko.University.Backend.Application;
@@ -37,6 +38,7 @@ public static class DependencyInjection {
     services.AddTransient<GetCoursesTags.UseCase>();
     services.AddTransient<GetTagsByCourseId.UseCase>();
     services.AddTransient<GetCoursesByTagId.UseCase>();
+    services.AddTransient<CreateComment.UseCase>();
 
     return services;
   }

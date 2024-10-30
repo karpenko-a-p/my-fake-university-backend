@@ -3,7 +3,7 @@
 /// <summary>
 /// Комментарий к курсу
 /// </summary>
-public sealed class CourseComment {
+public sealed class CourseCommentModel {
   /// <summary>
   /// Идентификатор
   /// </summary>

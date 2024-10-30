@@ -47,4 +47,16 @@ internal sealed class CourseCommentEntity {
   /// Навигация на курс
   /// </summary>
   public CourseEntity? Course { get; set; }
+
+  /// <summary>
+  /// Приведение к модели комментария
+  /// </summary>
+  public CourseCommentModel ToCourseCommentModel() {
+    return new() {
+      Id = Id,
+      CreationDate =  CreationDate,
+      Content = Content,
+      Quality = Quality
+    };
+  }
 }

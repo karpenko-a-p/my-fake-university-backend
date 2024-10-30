@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourseById;
 using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCoursesByTagId;
+using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;
 
@@ -14,7 +15,8 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 internal sealed class CourseRepository(PostgresDbContext db) : AbstractRepository<PostgresDbContext>(db),
   GetCourses.ICourseRepository,
   GetCourseById.ICourseRepository,
-  GetCoursesByTagId.ICourseRepository
+  GetCoursesByTagId.ICourseRepository,
+  CreateComment.ICourseRepository
 {
   /// <inheritdoc />
   public async Task<ICollection<CourseModel>> GetCoursesAsync(PaginationModel pagination, CancellationToken cancellationToken) {
@@ -58,5 +60,10 @@ internal sealed class CourseRepository(PostgresDbContext db) : AbstractRepositor
       .Paginate(pagination)
       .Where(course => course.Tags.Any(tag => tag.Id == tagId))
       .CountAsync(cancellationToken);
+  }
+
+  /// <inheritdoc />
+  public Task<bool> CheckCourseExistsByIdAsync(long courseId, CancellationToken cancellationToken) {
+    return db.Courses.AnyAsync(course => course.Id == courseId, cancellationToken);
   }
 }

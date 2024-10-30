@@ -2,6 +2,7 @@
 using Karpenko.University.Backend.Core.ResultPattern;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
+using static Karpenko.University.Backend.Application.UseCases.GenerateJwtToken.Constants;
 
 namespace Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
 
@@ -21,8 +22,8 @@ public sealed class UseCase(
       return new Results.ValidationError(validationResult);
 
     Claim[] claims = [
-      new(nameof(EntryData.Email), EntryData.Email!),
-      new(nameof(EntryData.Id), EntryData.Id.GetValueOrDefault().ToString()),
+      new(EmailClaimName, EntryData.Email!),
+      new(IdClaimName, EntryData.Id.GetValueOrDefault().ToString()),
     ];
 
     var generateJwtTokenDto = new GenerateJwtTokenDto(

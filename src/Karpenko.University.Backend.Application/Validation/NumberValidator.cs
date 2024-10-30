@@ -45,6 +45,11 @@ public sealed class NumberValidator<TNumber>(string propertyName, TNumber? value
   /// Сообщение об ошибке при равенстве определенному значение
   /// </summary>
   public const string NotEqualErrorMessage = "Число не должно быть равно {0}";
+  
+  /// <summary>
+  /// Сообщение об ошибке при несоответствии числа определенному перечислению
+  /// </summary>
+  public const string IsDefinedInErrorMessage = "Недопустимый формат числа";
 
   /// <summary>
   /// Число не равно null
@@ -102,6 +107,16 @@ public sealed class NumberValidator<TNumber>(string propertyName, TNumber? value
   public NumberValidator<TNumber> LowerThenOrEqual(TNumber compareValue, string? errorMessage = null) {
     if (value is null || value > compareValue)
       validationErrors.Add(new (propertyName, errorMessage ?? string.Format(LowerThenOrEqualErrorMessage, compareValue)));
+
+    return this;
+  }
+
+  /// <summary>
+  /// Определено ли число в перечислении
+  /// </summary>
+  public NumberValidator<TNumber> IsDefinedIn<TEnum>(string? errorMessage = null) where TEnum : Enum {
+    if (value is null || !Enum.IsDefined(typeof(TEnum), value))
+      validationErrors.Add(new (propertyName, errorMessage ?? IsDefinedInErrorMessage));
 
     return this;
   }
