@@ -9,6 +9,7 @@ using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateCom
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using DeleteCommentById = Karpenko.University.Backend.Application.UseCases.DeleteCommentById;
 using GetCommentsByAuthorId = Karpenko.University.Backend.Application.UseCases.GetCommentsByAuthorId;
+using GetCommentsByCourseId = Karpenko.University.Backend.Application.UseCases.GetCommentsByCourseId;
 using Results = Karpenko.University.Backend.Application.Validation.Results;
 
 namespace Karpenko.University.Backend.API.Controllers.Comment;
@@ -24,13 +25,25 @@ public sealed class CommentController : ExtendedControllerBase {
   /// <summary>
   /// Получение комментариев определенного курса
   /// </summary>
+  /// <response code="200">Список комментариев</response>
+  [ProducesResponseType<PaginatedItems<CommentWithAuthorContract>>(StatusCodes.Status200OK)]
   [HttpGet("by-course/{courseId:long:min(0)}")]
   public async Task<IActionResult> GetCommentsByCourseIdAsync(
     [FromRoute(Name = "courseId")] long courseId,
     [FromQuery] PaginationModel pagination,
+    [FromServices] GetCommentsByCourseId.UseCase getCommentsByCourseIdUseCase,
     CancellationToken cancellationToken
   ) {
-    return Ok();
+    var commentsResult = await getCommentsByCourseIdUseCase
+      .SetEntryData(new(courseId, pagination))
+      .ExecuteAsync(cancellationToken);
+
+    if (commentsResult is not GetCommentsByCourseId.Results.CommentsCollection { Comments: var comments })
+      return CantHandleRequest();
+
+    var mappedComments = comments.Map(comment => new CommentWithAuthorContract(comment));
+
+    return Ok(mappedComments);
   }
 
   /// <summary>

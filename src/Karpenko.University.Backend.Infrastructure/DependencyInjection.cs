@@ -13,6 +13,7 @@ using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCo
 using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
 using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
+using GetCommentsByCourseId = Karpenko.University.Backend.Application.UseCases.GetCommentsByCourseId;
 
 namespace Karpenko.University.Backend.Infrastructure;
 
@@ -31,6 +32,7 @@ public static class DependencyInjection {
     services.AddSingleton<GetCourses.ICacheService, CourseCacheService>();
     services.AddSingleton<GetCoursesTags.ICacheService, CourseTagCacheService>();
     services.AddSingleton<GetCoursesByTagId.ICacheService, CourseCacheService>();
+    services.AddSingleton<GetCommentsByCourseId.ICacheService, CommentCacheService>();
 
     // Сервисы
     services.AddSingleton<CreateStudent.IPasswordService, PasswordService>();

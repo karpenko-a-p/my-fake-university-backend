@@ -1,6 +1,7 @@
 ﻿using Karpenko.University.Backend.Domain.CourseComment;
 using Karpenko.University.Backend.Persistence.Database.Entities.Course;
 using Karpenko.University.Backend.Persistence.Database.Entities.Student;
+using GetCommentsByCourseId = Karpenko.University.Backend.Application.UseCases.GetCommentsByCourseId;
 
 namespace Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
 
@@ -54,9 +55,28 @@ internal sealed class CourseCommentEntity {
   public CourseCommentModel ToCourseCommentModel() {
     return new() {
       Id = Id,
-      CreationDate =  CreationDate,
+      CreationDate = CreationDate,
       Content = Content,
       Quality = Quality
     };
+  }
+
+  /// <summary>
+  /// Приведение к модели комментария с данными автором
+  /// </summary>
+  public GetCommentsByCourseId.CommentWithAuthorDto ToCourseCommentWithAuthor() {
+    var authorDto = Author is null
+      ? null
+      : new GetCommentsByCourseId.AuthorDto(
+        Author.Id,
+        Author.Name,
+        Author.AvatarUrl);
+
+    return new(
+      Id,
+      Content,
+      Quality,
+      CreationDate,
+      authorDto);
   }
 }
