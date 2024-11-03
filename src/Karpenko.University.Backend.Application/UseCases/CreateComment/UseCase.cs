@@ -10,7 +10,8 @@ namespace Karpenko.University.Backend.Application.UseCases.CreateComment;
 public sealed class UseCase(
   ICourseRepository courseRepository,
   ICommentRepository commentRepository,
-  IValidator<EntryData> entryDataValidator
+  IValidator<EntryData> entryDataValidator,
+  ICacheService cacheService
 ) : AbstractAsyncUseCase<EntryData> {
   /// <inheritdoc />
   public override async Task<IResult> ExecuteAsync(CancellationToken cancellationToken) {
@@ -18,21 +19,23 @@ public sealed class UseCase(
 
     if (validationResult.IsFailure)
       return new Validation.Results.ValidationFailure(validationResult);
+
+    var courseId = EntryData.CourseId.GetValueOrDefault();
     
-    var courseExists = await courseRepository.CheckCourseExistsByIdAsync(
-      EntryData.CourseId.GetValueOrDefault(),
-      cancellationToken);
+    var courseExists = await courseRepository.CheckCourseExistsByIdAsync(courseId, cancellationToken);
 
     if (!courseExists)
       return new Results.CourseNotFound();
 
     var createCommentDto = new CreateCommentDto(
-      EntryData.CourseId.GetValueOrDefault(),
+      courseId,
       EntryData.CreatorId.GetValueOrDefault(),
       EntryData.Content!,
       (CourseQuality)EntryData.Quality!);
 
     var comment = await commentRepository.CreateCommentAsync(createCommentDto, cancellationToken);
+
+    cacheService.ClearCacheByCourseIdAsync(courseId, cancellationToken);
 
     return new Results.Created(comment);
   }

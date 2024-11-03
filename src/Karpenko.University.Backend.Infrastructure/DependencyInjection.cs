@@ -14,6 +14,7 @@ using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess
 using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using GetCommentsByCourseId = Karpenko.University.Backend.Application.UseCases.GetCommentsByCourseId;
+using DeleteCommentById = Karpenko.University.Backend.Application.UseCases.DeleteCommentById;
 
 namespace Karpenko.University.Backend.Infrastructure;
 
@@ -34,6 +35,8 @@ public static class DependencyInjection {
     services.AddSingleton<GetCoursesTags.ICacheService, CourseTagCacheService>();
     services.AddSingleton<GetCoursesByTagId.ICacheService, CourseCacheService>();
     services.AddSingleton<GetCommentsByCourseId.ICacheService, CommentCacheService>();
+    services.AddSingleton<DeleteCommentById.ICacheService, CommentCacheService>();
+    services.AddSingleton<CreateComment.ICacheService, CommentCacheService>();
 
     // Сервисы
     services.AddSingleton<CreateStudent.IPasswordService, PasswordService>();
