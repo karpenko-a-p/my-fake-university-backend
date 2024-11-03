@@ -1,15 +1,17 @@
-﻿using Karpenko.University.Backend.Application.Pagination;
+﻿using Karpenko.University.Backend.Application.Caching;
+using Karpenko.University.Backend.Application.Pagination;
 using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCoursesByTagId;
 using Karpenko.University.Backend.Domain.Course;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 
 namespace Karpenko.University.Backend.Infrastructure.Caching;
 
 /// <summary>
 /// Реализация сервиса для работы с кэшем данных курсов
 /// </summary>
-internal sealed class CourseCacheService(IDistributedCache cache) : AbstractCacheService(cache),
+internal sealed class CourseCacheService(IDistributedCache cache, IOptions<CacheOptions> cacheOptions) : AbstractCacheService(cache, cacheOptions),
   GetCourses.ICacheService,
   GetCoursesByTagId.ICacheService
 {

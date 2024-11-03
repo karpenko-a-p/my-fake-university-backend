@@ -1,5 +1,7 @@
-﻿using Karpenko.University.Backend.Application.Pagination;
+﻿using Karpenko.University.Backend.Application.Caching;
+using Karpenko.University.Backend.Application.Pagination;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using GetCommentsByCourseId = Karpenko.University.Backend.Application.UseCases.GetCommentsByCourseId;
 
 namespace Karpenko.University.Backend.Infrastructure.Caching;
@@ -7,7 +9,7 @@ namespace Karpenko.University.Backend.Infrastructure.Caching;
 /// <summary>
 /// Сервис для работы с кэшем комментариев
 /// </summary>
-internal sealed class CommentCacheService(IDistributedCache cache) : AbstractCacheService(cache), GetCommentsByCourseId.ICacheService {
+internal sealed class CommentCacheService(IDistributedCache cache, IOptions<CacheOptions> cacheOptions) : AbstractCacheService(cache, cacheOptions), GetCommentsByCourseId.ICacheService {
   /// <summary>
   /// Ключ кэширования для пагинированного списка комментариев
   /// </summary>

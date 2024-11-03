@@ -26,6 +26,7 @@ public static class DependencyInjection {
   /// </summary>
   public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
     // Распределенный кэш
+    services.ConfigureOptions<ConfigureCacheOptions>();
     services.AddStackExchangeRedisCache(options => {
       options.Configuration = configuration.GetConnectionString("Redis");
     });
