@@ -7,6 +7,7 @@ using GetStudentById = Karpenko.University.Backend.Application.UseCases.GetStude
 using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourseById;
 using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder;
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
+using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderById;
 using Results = Karpenko.University.Backend.Application.Validation.Results;
 
 namespace Karpenko.University.Backend.API.Controllers.Order;
@@ -93,12 +94,37 @@ public sealed class OrderController : ExtendedControllerBase {
   /// <summary>
   /// Получение заказа по идентификатору
   /// </summary>
+  /// <response code="200">Заказ найден</response>
+  /// <response code="404">Заказ не найден</response>
+  /// <response code="403">Недостаточно прав</response>
+  /// <response code="401">Необходима авторизация</response>
+  [ProducesResponseType<OrderContract>(StatusCodes.Status200OK)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status404NotFound)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status403Forbidden)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status401Unauthorized)]
+  [Authorize]
   [HttpGet("{orderId:long:min(0)}")]
   public async Task<IActionResult> GetOrderByIdAsync(
     [FromRoute(Name = "orderId")] long orderId,
+    [FromServices] GetOrderById.UseCase getOrderByIdUseCase,
     CancellationToken cancellationToken
   ) {
-    return Ok();
+    // Получение заказа
+    var getOrderResult = await getOrderByIdUseCase
+      .SetEntryData(orderId)
+      .ExecuteAsync(cancellationToken);
+    
+    if (getOrderResult is not GetOrderById.Results.Found { Order: var order })
+      return getOrderResult switch {
+        GetOrderById.Results.NotFound => NotFound(),
+        _ => CantHandleRequest()
+      };
+
+    // Проверка доступа, надо бы через пермишены, но мне в падлу уже =)
+    if (GetClaimId() != order.Payer.Id)
+      return Forbidden(ErrorContract.Forbidden("Нет доступа для просмотра данных заказа"));
+    
+    return Ok(new OrderContract(order));
   }
 
   /// <summary>
