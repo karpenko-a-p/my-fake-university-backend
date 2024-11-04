@@ -13,5 +13,6 @@ public interface IPermissionRepository {
     long ownerId,
     long subjectId,
     PermissionType permissionType,
+    PermissionSubject permissionSubject,
     CancellationToken cancellationToken);
 }

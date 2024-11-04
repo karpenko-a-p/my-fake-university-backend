@@ -22,13 +22,19 @@ internal sealed class PermissionEntity {
   public PermissionType PermissionType { get; set; }
 
   /// <summary>
+  /// Цель доступа
+  /// </summary>
+  public PermissionSubject PermissionSubject { get; set; }
+
+  /// <summary>
   /// Приведение сущности из БД к модели права доступа
   /// </summary>
   public PermissionModel ToPermissionModel() {
     return new() {
       OwnerId = OwnerId,
       SubjectId = SubjectId,
-      PermissionType = PermissionType
+      PermissionType = PermissionType,
+      PermissionSubject = PermissionSubject
     };
   }
 }

@@ -96,7 +96,7 @@ public sealed class StudentController : ExtendedControllerBase {
       return NotFound(ErrorContract.NotFound(errorMessage: "Студент не найден"));
 
     var checkAccessResult = await checkAccessUseCase
-      .SetEntryData(new (studentId, studentId, PermissionType.Delete))
+      .SetEntryData(new (studentId, studentId, PermissionType.Delete, PermissionSubject.Student))
       .ExecuteAsync(cancellationToken);
     
     if (checkAccessResult is not CheckAccess.Results.HasAccess)

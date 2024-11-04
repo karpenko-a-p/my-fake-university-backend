@@ -13,7 +13,12 @@ public sealed class PermissionModel {
   /// Идентификатор над кем/чем может производиться действие 
   /// </summary>
   public long SubjectId { get; set; }
-  
+
+  /// <summary>
+  /// Цель доступа
+  /// </summary>
+  public PermissionSubject PermissionSubject { get; set; }
+
   /// <summary>
   /// Тип доступа
   /// </summary>

@@ -16,15 +16,20 @@ internal sealed class Configuration : IEntityTypeConfiguration<PermissionEntity>
       model.SubjectId,
       model.PermissionType
     });
-    
+
     builder.Property(model => model.OwnerId)
       .HasColumnName("owner_id")
       .IsRequired();
-    
+
     builder.Property(model => model.SubjectId)
       .HasColumnName("subject_id")
       .IsRequired();
-    
+
+    builder.Property(model => model.PermissionSubject)
+      .HasColumnName("permission_subject")
+      .IsRequired()
+      .HasConversion<string>();
+
     builder.Property(model => model.PermissionType)
       .HasColumnName("permission_type")
       .IsRequired()

@@ -21,10 +21,12 @@ internal sealed class PermissionRepository(PostgresDbContext db) :
     long ownerId,
     long subjectId,
     PermissionType permissionType,
+    PermissionSubject permissionSubject,
     CancellationToken cancellationToken
   ) {
     return db.Permissions.AnyAsync(permission => permission.OwnerId == ownerId &&
                                                  permission.SubjectId == subjectId &&
+                                                 permission.PermissionSubject == permissionSubject &&
                                                  permission.PermissionType == permissionType, cancellationToken);
   }
 
@@ -33,12 +35,14 @@ internal sealed class PermissionRepository(PostgresDbContext db) :
     long ownerId,
     long subjectId,
     PermissionType permissionType,
+    PermissionSubject permissionSubject,
     CancellationToken cancellationToken
   ) {
     var permission = new PermissionEntity {
       OwnerId = ownerId,
       SubjectId = subjectId,
-      PermissionType = permissionType
+      PermissionType = permissionType,
+      PermissionSubject = permissionSubject
     };
     
     await db.Permissions.AddAsync(permission, cancellationToken);
@@ -52,7 +56,8 @@ internal sealed class PermissionRepository(PostgresDbContext db) :
     var permissionEntities = permissions.Select(model => new PermissionEntity {
       OwnerId = model.OwnerId,
       SubjectId = model.SubjectId,
-      PermissionType = model.PermissionType
+      PermissionType = model.PermissionType,
+      PermissionSubject = model.PermissionSubject
     });
 
     await db.Permissions.AddRangeAsync(permissionEntities, cancellationToken);

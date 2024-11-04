@@ -9,5 +9,10 @@ public interface IPermissionRepository {
   /// <summary>
   /// Проверка есть на наличие доступа
   /// </summary>
-  Task<bool> CheckHasAccessAsync(long ownerId, long subjectId, PermissionType permissionType, CancellationToken cancellationToken);
+  Task<bool> CheckHasAccessAsync(
+    long ownerId,
+    long subjectId,
+    PermissionType permissionType,
+    PermissionSubject permissionSubject,
+    CancellationToken cancellationToken);
 }

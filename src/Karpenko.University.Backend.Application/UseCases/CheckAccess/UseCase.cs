@@ -16,13 +16,14 @@ public sealed class UseCase(
 
     if (validationResult.IsFailure)
       return new Validation.Results.ValidationFailure(validationResult);
-    
+
     var hasAccess = await permissionRepository.CheckHasAccessAsync(
       EntryData.OwnerId.GetValueOrDefault(),
       EntryData.SubjectId.GetValueOrDefault(),
       EntryData.PermissionType,
+      EntryData.PermissionSubject,
       cancellationToken);
-    
+
     return hasAccess
       ? new Results.HasAccess()
       : new Results.NoAccess();

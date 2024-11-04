@@ -11,4 +11,5 @@ namespace Karpenko.University.Backend.Application.UseCases.AddAccess;
 public sealed record EntryData(
   long? OwnerId,
   long? SubjectId,
-  PermissionType PermissionType);
+  PermissionType PermissionType,
+  PermissionSubject PermissionSubject);

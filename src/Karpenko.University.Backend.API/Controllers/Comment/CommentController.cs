@@ -92,7 +92,7 @@ public sealed class CommentController : ExtendedControllerBase {
 
     // Проверка прав, что есть доступ курсу для которого пишется коммент
     var checkAccessResult = await checkAccessUseCase
-      .SetEntryData(new(studentId, createCommentContract.CourseId, PermissionType.Read))
+      .SetEntryData(new(studentId, createCommentContract.CourseId, PermissionType.Read, PermissionSubject.Course))
       .ExecuteAsync(cancellationToken);
 
     if (checkAccessResult is CheckAccess.Results.NoAccess)
@@ -116,7 +116,7 @@ public sealed class CommentController : ExtendedControllerBase {
     
     // Предоставление доступа
     var addAccessResult = await addAccessUseCase
-      .SetEntryData(new(studentId, comment.Id, PermissionType.Delete))
+      .SetEntryData(new(studentId, comment.Id, PermissionType.Delete, PermissionSubject.Comment))
       .ExecuteAsync(cancellationToken);
     
     if (addAccessResult is not AddAccess.Results.Success)
@@ -146,7 +146,7 @@ public sealed class CommentController : ExtendedControllerBase {
 
     // Проверка доступа
     var checkAccessResult = await checkAccessUseCase
-      .SetEntryData(new(studentId, commentId, PermissionType.Delete))
+      .SetEntryData(new(studentId, commentId, PermissionType.Delete, PermissionSubject.Comment))
       .ExecuteAsync(cancellationToken);
 
     if (checkAccessResult is not CheckAccess.Results.HasAccess)

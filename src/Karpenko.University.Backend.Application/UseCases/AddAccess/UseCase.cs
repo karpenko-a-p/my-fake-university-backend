@@ -16,13 +16,14 @@ public sealed class UseCase(
 
     if (validationResult.IsFailure)
       return new Validation.Results.ValidationFailure(validationResult);
-    
+
     var permission = await permissionRepository.AddPermissionAsync(
       EntryData.OwnerId.GetValueOrDefault(),
       EntryData.SubjectId.GetValueOrDefault(),
       EntryData.PermissionType,
+      EntryData.PermissionSubject,
       cancellationToken);
-    
+
     return new Results.Success(permission);
   }
 }
