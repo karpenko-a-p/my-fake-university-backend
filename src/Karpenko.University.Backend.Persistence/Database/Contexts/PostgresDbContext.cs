@@ -1,6 +1,7 @@
 ﻿using Karpenko.University.Backend.Persistence.Database.Entities.Course;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseTag;
+using Karpenko.University.Backend.Persistence.Database.Entities.Order;
 using Karpenko.University.Backend.Persistence.Database.Entities.Permission;
 using Karpenko.University.Backend.Persistence.Database.Entities.Student;
 using Karpenko.University.Backend.Persistence.Database.Entities.StudentPassword;
@@ -41,6 +42,11 @@ internal sealed class PostgresDbContext(DbContextOptions<PostgresDbContext> opti
   /// Таблица с комментариями курсов
   /// </summary>
   public DbSet<CourseCommentEntity> Comments { get; set; } = null!;
+  
+  /// <summary>
+  /// Таблица с заказами
+  /// </summary>
+  public DbSet<OrderEntity> Orders { get; set; } = null!;
 
   /// <inheritdoc />
   protected override void OnModelCreating(ModelBuilder modelBuilder) {

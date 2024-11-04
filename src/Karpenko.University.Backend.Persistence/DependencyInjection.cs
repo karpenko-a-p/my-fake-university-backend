@@ -16,6 +16,7 @@ using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateCom
 using DeleteCommentById = Karpenko.University.Backend.Application.UseCases.DeleteCommentById;
 using GetCommentsByAuthorId = Karpenko.University.Backend.Application.UseCases.GetCommentsByAuthorId;
 using GetCommentsByCourseId = Karpenko.University.Backend.Application.UseCases.GetCommentsByCourseId;
+using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder;
 using Karpenko.University.Backend.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -62,6 +63,7 @@ public static class DependencyInjection {
     services.AddScoped<DeleteCommentById.ICommentRepository, CommentRepository>();
     services.AddScoped<GetCommentsByAuthorId.ICommentRepository, CommentRepository>();
     services.AddScoped<GetCommentsByCourseId.ICommentRepository, CommentRepository>();
+    services.AddScoped<CreateOrder.IOrderRepository, OrderRepository>();
     
     return services;
   }

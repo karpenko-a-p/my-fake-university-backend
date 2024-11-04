@@ -1,4 +1,6 @@
-﻿namespace Karpenko.University.Backend.Persistence.Database.Entities.Order;
+﻿using Karpenko.University.Backend.Domain.Order;
+
+namespace Karpenko.University.Backend.Persistence.Database.Entities.Order;
 
 /// <summary>
 /// Сущность заказа в БД
@@ -48,4 +50,25 @@ internal sealed class OrderEntity {
   /// Время оплаты
   /// </summary>
   public DateTime PaymentTime { get; set; }
+
+  /// <summary>
+  /// Преобразование сущности из бд к модели
+  /// </summary>
+  public OrderModel ToOrderModel() {
+    return new() {
+      Id = Id,
+      Description = Description ?? string.Empty,
+      PaymentTime = PaymentTime,
+      Price = Price,
+      Payer = new() {
+        Id = PayerId,
+        Email = PayerEmail,
+        Name = PayerName
+      },
+      Product = new() {
+        Id = ProductId,
+        Name = ProductName,
+      }
+    };
+  }
 }

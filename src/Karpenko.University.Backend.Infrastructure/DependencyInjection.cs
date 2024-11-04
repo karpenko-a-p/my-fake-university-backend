@@ -15,6 +15,8 @@ using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateCom
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using GetCommentsByCourseId = Karpenko.University.Backend.Application.UseCases.GetCommentsByCourseId;
 using DeleteCommentById = Karpenko.University.Backend.Application.UseCases.DeleteCommentById;
+using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourseById;
+using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder;
 
 namespace Karpenko.University.Backend.Infrastructure;
 
@@ -50,6 +52,8 @@ public static class DependencyInjection {
     services.AddSingleton<IValidator<CheckAccess.EntryData>, CheckAccessEntryDataValidator>();
     services.AddSingleton<IValidator<CreateComment.EntryData>, CreateCommentEntryDataValidator>();
     services.AddSingleton<IValidator<AddAccess.EntryData>, AddAccessEntryDataValidator>();
+    services.AddSingleton<IValidator<GetCourseById.EntryData>, GetCourseByIdEntryDataValidator>();
+    services.AddSingleton<IValidator<CreateOrder.EntryData>, CreateOrderEntryDataValidator>();
 
     return services;
   }

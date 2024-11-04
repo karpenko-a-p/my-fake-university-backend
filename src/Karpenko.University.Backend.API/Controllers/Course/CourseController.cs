@@ -52,7 +52,7 @@ public sealed class CourseController : ExtendedControllerBase {
     [FromServices] GetCourseById.UseCase getCourseByIdUseCase
   ) {
     var gerCourseResult = await getCourseByIdUseCase
-      .SetEntryData(id)
+      .SetEntryData(new(id))
       .ExecuteAsync(cancellationToken);
 
     return gerCourseResult switch {

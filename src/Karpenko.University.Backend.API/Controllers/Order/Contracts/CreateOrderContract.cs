@@ -6,5 +6,5 @@
 /// <param name="Description">Комментарий к заказу</param>
 /// <param name="CourseId">Идентификатор курса</param>
 public sealed record CreateOrderContract(
-  string Description,
-  long CourseId);
+  string? Description,
+  long? CourseId);
