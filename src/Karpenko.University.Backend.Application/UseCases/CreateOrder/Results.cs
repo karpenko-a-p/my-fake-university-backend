@@ -11,4 +11,9 @@ public static class Results {
   /// Заказ создан
   /// </summary>
   public sealed record Created(OrderModel Order) : IResult;
+
+  /// <summary>
+  /// Уже куплено
+  /// </summary>
+  public sealed record AlreadyBought : IResult;
 }

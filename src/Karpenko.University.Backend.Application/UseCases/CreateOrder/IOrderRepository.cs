@@ -10,4 +10,9 @@ public interface IOrderRepository {
   /// Создание нового заказа
   /// </summary>
   Task<OrderModel> CreateOrderAsync(CreateOrderDto order, CancellationToken cancellationToken);
+
+  /// <summary>
+  /// Проверка, что уже существует подобный заказ и он оплачен
+  /// </summary>
+  Task<bool> CheckIfAlreadyBoughtAsync(long payerId, long productId, CancellationToken cancellationToken);
 }

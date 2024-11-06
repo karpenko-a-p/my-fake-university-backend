@@ -37,6 +37,13 @@ internal sealed class OrderRepository(PostgresDbContext db) : AbstractRepository
   }
 
   /// <inheritdoc />
+  public Task<bool> CheckIfAlreadyBoughtAsync(long payerId, long productId, CancellationToken cancellationToken) {
+    return db.Orders.AnyAsync(order => order.PayerId == payerId &&
+                                       order.ProductId == productId &&
+                                       order.PaymentStatus == PaymentStatus.Paid, cancellationToken);
+  }
+
+  /// <inheritdoc />
   public async Task<OrderModel?> GetOrderByIdAsync(long orderId, CancellationToken cancellationToken) {
     var orderEntity = await db.Orders
       .AsNoTracking()

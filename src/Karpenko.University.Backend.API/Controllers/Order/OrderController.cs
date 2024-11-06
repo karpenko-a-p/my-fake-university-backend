@@ -66,6 +66,7 @@ public sealed class OrderController : ExtendedControllerBase {
     if (createOrderResult is not CreateOrder.Results.Created { Order: var order })
       return createOrderResult switch {
         Results.ValidationFailure { ValidationResult: var validationResult } => BadRequest(ErrorContract.ValidationError(validationResult)),
+        CreateOrder.Results.AlreadyBought => BadRequest(ErrorContract.BadRequest("Нельзя сделать заказ повторно")),
         _ => CantHandleRequest()
       };
 

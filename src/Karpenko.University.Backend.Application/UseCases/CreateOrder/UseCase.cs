@@ -17,6 +17,14 @@ public sealed class UseCase(
     if (validationResult.IsFailure)
       return new Validation.Results.ValidationFailure(validationResult);
 
+    var alreadyBought = await orderRepository.CheckIfAlreadyBoughtAsync(
+      EntryData.Student.Id,
+      EntryData.Course.Id,
+      cancellationToken);
+
+    if (alreadyBought)
+      return new Results.AlreadyBought();
+
     var createOrderDto = new CreateOrderDto(
       EntryData.Course,
       EntryData.Student,
