@@ -73,15 +73,16 @@ internal sealed class StudentRepository(PostgresDbContext db) : AbstractReposito
 
   /// <inheritdoc />
   public async Task<bool> DeleteStudentByIdAsync(long id, CancellationToken cancellationToken) {
-    // При удалении через ExecuteDelete не срабатывают триггеры!
-    var student = await db.Students.FirstOrDefaultAsync(student => student.Id == id, cancellationToken);
+    return await InTransactionAsync(async () => {
+      var deletedStudentCout = await db.Students
+        .Where(student => student.Id == id)
+        .ExecuteDeleteAsync(cancellationToken);
+      
+      await db.Permissions
+        .Where(permission => permission.OwnerId == id)
+        .ExecuteDeleteAsync(cancellationToken);
 
-    if (student is null)
-      return false;
-
-    db.Students.Remove(student);
-    await db.SaveChangesAsync(cancellationToken);
-
-    return true;
+      return deletedStudentCout is 0;
+    }, cancellationToken);
   }
 }

@@ -14,5 +14,5 @@ public interface ICommentRepository {
   /// <summary>
   /// Удаление комментария по идентификатору
   /// </summary>
-  Task DeleteCourseByIdAsync(long id, CancellationToken cancellationToken);
+  Task DeleteCommentByIdAsync(long id, CancellationToken cancellationToken);
 }

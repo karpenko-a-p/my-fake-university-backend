@@ -18,6 +18,7 @@ using GetCommentsByAuthorId = Karpenko.University.Backend.Application.UseCases.G
 using GetCommentsByCourseId = Karpenko.University.Backend.Application.UseCases.GetCommentsByCourseId;
 using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder;
 using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderById;
+using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
 using Karpenko.University.Backend.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +35,7 @@ public static class DependencyInjection {
   /// </summary>
   public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
     // Контексты БД
-    services.AddTriggeredDbContextPool<PostgresDbContext>(options => {
+    services.AddDbContextPool<PostgresDbContext>(options => {
       options
         .UseNpgsql(configuration.GetConnectionString("Postgres"), npgOptions => {
           npgOptions.MigrationsHistoryTable(
@@ -43,7 +44,6 @@ public static class DependencyInjection {
         })
         .UseSnakeCaseNamingConvention();
     });
-    services.AddAssemblyTriggers();
 
     // Репозитории
     services.AddScoped<CreateStudent.IStudentRepository, StudentRepository>();
@@ -66,7 +66,8 @@ public static class DependencyInjection {
     services.AddScoped<GetCommentsByCourseId.ICommentRepository, CommentRepository>();
     services.AddScoped<CreateOrder.IOrderRepository, OrderRepository>();
     services.AddScoped<GetOrderById.IOrderRepository, OrderRepository>();
-    
+    services.AddScoped<DeleteOrderById.IOrderRepository, OrderRepository>();
+
     return services;
   }
 }

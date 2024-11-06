@@ -1,5 +1,6 @@
 ﻿using Karpenko.University.Backend.Application.Pagination;
 using Karpenko.University.Backend.Domain.CourseComment;
+using Karpenko.University.Backend.Domain.Permission;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
 using Microsoft.EntityFrameworkCore;
@@ -44,10 +45,17 @@ internal sealed class CommentRepository(PostgresDbContext db) : AbstractReposito
   }
 
   /// <inheritdoc />
-  public async Task DeleteCourseByIdAsync(long id, CancellationToken cancellationToken) {
-    await db.Comments
-      .Where(comment => comment.Id == id)
-      .ExecuteDeleteAsync(cancellationToken);
+  public async Task DeleteCommentByIdAsync(long id, CancellationToken cancellationToken) {
+    await InTransactionAsync(async () => {
+      await db.Comments
+        .Where(comment => comment.Id == id)
+        .ExecuteDeleteAsync(cancellationToken);
+
+      await db.Permissions
+        .Where(permission => permission.SubjectId == id &&
+                             permission.PermissionSubject == PermissionSubject.Comment)
+        .ExecuteDeleteAsync(cancellationToken);
+    }, cancellationToken);
   }
 
   /// <inheritdoc />

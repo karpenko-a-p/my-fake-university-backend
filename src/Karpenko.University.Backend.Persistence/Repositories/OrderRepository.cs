@@ -1,9 +1,11 @@
 ﻿using Karpenko.University.Backend.Domain.Order;
+using Karpenko.University.Backend.Domain.Permission;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
 using Karpenko.University.Backend.Persistence.Database.Entities.Order;
 using Microsoft.EntityFrameworkCore;
 using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder;
 using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderById;
+using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;
 
@@ -12,7 +14,8 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 /// </summary>
 internal sealed class OrderRepository(PostgresDbContext db) : AbstractRepository<PostgresDbContext>(db),
   CreateOrder.IOrderRepository,
-  GetOrderById.IOrderRepository
+  GetOrderById.IOrderRepository,
+  DeleteOrderById.IOrderRepository
 {
   /// <inheritdoc />
   public async Task<OrderModel> CreateOrderAsync(CreateOrder.CreateOrderDto order, CancellationToken cancellationToken) {
@@ -39,5 +42,19 @@ internal sealed class OrderRepository(PostgresDbContext db) : AbstractRepository
       .FirstOrDefaultAsync(order => order.Id == orderId, cancellationToken);
     
     return orderEntity?.ToOrderModel();
+  }
+
+  /// <inheritdoc />
+  public async Task DeleteOrderByIdAsync(long id, CancellationToken cancellationToken) {
+    await InTransactionAsync(async () => {
+      await db.Orders
+        .Where(order => order.Id == id)
+        .ExecuteDeleteAsync(cancellationToken);
+
+      await db.Permissions
+        .Where(permission => permission.SubjectId == id &&
+                             permission.PermissionSubject == PermissionSubject.Order)
+        .ExecuteDeleteAsync(cancellationToken);
+    }, cancellationToken);
   }
 }

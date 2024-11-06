@@ -14,7 +14,8 @@ internal sealed class Configuration : IEntityTypeConfiguration<PermissionEntity>
     builder.HasKey(model => new {
       model.OwnerId,
       model.SubjectId,
-      model.PermissionType
+      model.PermissionType,
+      model.PermissionSubject
     });
 
     builder.Property(model => model.OwnerId)

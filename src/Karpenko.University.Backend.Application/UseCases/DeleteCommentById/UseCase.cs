@@ -13,7 +13,7 @@ public sealed class UseCase(ICommentRepository commentRepository, ICacheService 
     if (comment is null)
       return new Results.NotFound();
 
-    await commentRepository.DeleteCourseByIdAsync(EntryData, cancellationToken);
+    await commentRepository.DeleteCommentByIdAsync(EntryData, cancellationToken);
 
     cacheService.ClearCacheByCourseIdAsync(comment.Id, cancellationToken);
 

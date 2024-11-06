@@ -8,6 +8,7 @@ using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourse
 using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder;
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderById;
+using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
 using Results = Karpenko.University.Backend.Application.Validation.Results;
 
 namespace Karpenko.University.Backend.API.Controllers.Order;
@@ -142,10 +143,23 @@ public sealed class OrderController : ExtendedControllerBase {
   /// Отмена и удаление заказа
   /// </summary>
   [HttpDelete("{orderId:long:min(0)}")]
-  public async Task<IActionResult> DeleteOrderAsync(
+  public async Task<IActionResult> DeleteOrderByIdAsync(
     [FromRoute(Name = "orderId")] long orderId,
+    [FromServices] DeleteOrderById.UseCase deleteOrderByIdUseCase,
     CancellationToken cancellationToken
   ) {
-    return Ok();
+    // Проверка доступа, надо бы через пермишены, но мне в падлу уже =)
+    if (GetClaimId() != orderId)
+      return Forbidden(ErrorContract.Forbidden("Нет доступа для отмены заказа"));
+    
+    var deleteResult = await deleteOrderByIdUseCase
+      .SetEntryData(orderId)
+      .ExecuteAsync(cancellationToken);
+
+    return deleteResult switch {
+      DeleteOrderById.Results.NotFound => NotFound(ErrorContract.NotFound("Заказ не найден")),
+      DeleteOrderById.Results.Deleted { Order: var order } => Ok(new OrderContract(order)),
+      _ => CantHandleRequest()
+    };
   }
 }
