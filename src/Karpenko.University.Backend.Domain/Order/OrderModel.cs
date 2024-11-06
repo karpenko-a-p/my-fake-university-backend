@@ -35,7 +35,12 @@ public sealed class OrderModel {
   public OrderPayer Payer { get; set; } = new();
 
   /// <summary>
-  /// Время оплаты
+  /// Время формирования заказа
   /// </summary>
-  public DateTime PaymentTime { get; set; }
+  public DateTime CreateDate { get; set; }
+
+  /// <summary>
+  /// Статус оплаты
+  /// </summary>
+  public PaymentStatus PaymentStatus { get; set; }
 }

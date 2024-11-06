@@ -114,7 +114,7 @@ public sealed class OrderController : ExtendedControllerBase {
     var getOrderResult = await getOrderByIdUseCase
       .SetEntryData(orderId)
       .ExecuteAsync(cancellationToken);
-    
+
     if (getOrderResult is not GetOrderById.Results.Found { Order: var order })
       return getOrderResult switch {
         GetOrderById.Results.NotFound => NotFound(),
@@ -142,6 +142,15 @@ public sealed class OrderController : ExtendedControllerBase {
   /// <summary>
   /// Отмена и удаление заказа
   /// </summary>
+  ///<response code="200">Заказ удален</response>
+  /// <response code="404">Заказ не найден</response>
+  /// <response code="403">Недостаточно прав</response>
+  /// <response code="401">Необходима авторизация</response>
+  [ProducesResponseType<OrderContract>(StatusCodes.Status200OK)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status404NotFound)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status403Forbidden)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status401Unauthorized)]
+  [Authorize]
   [HttpDelete("{orderId:long:min(0)}")]
   public async Task<IActionResult> DeleteOrderByIdAsync(
     [FromRoute(Name = "orderId")] long orderId,

@@ -14,7 +14,7 @@ internal sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderE
     builder.ToTable(Tables.Orders);
 
     builder.HasKey(model => model.Id);
-    
+
     builder.Property(model => model.Id)
       .IsRequired()
       .HasColumnName("id")
@@ -33,7 +33,7 @@ internal sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderE
       .HasColumnName("payer_name")
       .HasMaxLength(OrderPayer.NameMaxLength)
       .IsRequired();
-    
+
     builder.Property(model => model.PayerEmail)
       .HasColumnName("payer_email")
       .HasMaxLength(OrderPayer.EmailMaxLength)
@@ -42,21 +42,26 @@ internal sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderE
     builder.Property(model => model.ProductId)
       .IsRequired()
       .HasColumnName("product_id");
-    
+
     builder.Property(model => model.ProductName)
       .HasColumnName("product_name")
       .HasMaxLength(OrderProduct.NameMaxLength)
       .IsRequired();
-    
+
     builder.Property(model => model.Price)
       .HasColumnName("price")
       .HasColumnType("numeric(10,2)")
       .IsRequired();
-    
-    builder.Property(model => model.PaymentTime)
+
+    builder.Property(model => model.CreateDate)
       .IsRequired()
-      .HasColumnName("payment_time")
+      .HasColumnName("create_date")
       .HasDefaultValueSql("timezone('utc', now())")
       .HasColumnType("timestamp without time zone");
+
+    builder.Property(model => model.PaymentStatus)
+      .IsRequired()
+      .HasColumnName("payment_status")
+      .HasConversion<string>();
   }
 }

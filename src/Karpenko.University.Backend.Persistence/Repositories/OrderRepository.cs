@@ -27,6 +27,7 @@ internal sealed class OrderRepository(PostgresDbContext db) : AbstractRepository
       PayerName = order.Student.Name,
       ProductId = order.Course.Id,
       ProductName = order.Course.Name,
+      PaymentStatus = PaymentStatus.Unpaid
     };
     
     await db.Orders.AddAsync(orderEntity, cancellationToken);

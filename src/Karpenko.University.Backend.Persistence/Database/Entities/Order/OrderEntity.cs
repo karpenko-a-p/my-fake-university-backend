@@ -47,9 +47,14 @@ internal sealed class OrderEntity {
   public decimal Price { get; set; }
 
   /// <summary>
-  /// Время оплаты
+  /// Время создания заказа
   /// </summary>
-  public DateTime PaymentTime { get; set; }
+  public DateTime CreateDate { get; set; }
+
+  /// <summary>
+  /// Статус оплаты
+  /// </summary>
+  public PaymentStatus PaymentStatus { get; set; }
 
   /// <summary>
   /// Преобразование сущности из бд к модели
@@ -58,8 +63,9 @@ internal sealed class OrderEntity {
     return new() {
       Id = Id,
       Description = Description ?? string.Empty,
-      PaymentTime = PaymentTime,
+      CreateDate = CreateDate,
       Price = Price,
+      PaymentStatus = PaymentStatus,
       Payer = new() {
         Id = PayerId,
         Email = PayerEmail,

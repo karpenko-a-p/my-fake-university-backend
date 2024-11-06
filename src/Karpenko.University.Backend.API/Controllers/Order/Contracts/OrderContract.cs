@@ -10,14 +10,16 @@ namespace Karpenko.University.Backend.API.Controllers.Order.Contracts;
 /// <param name="Price">Стоимость</param>
 /// <param name="Product">Контракт покупаемого товара для заказа</param>
 /// <param name="Payer">Контракт плательщика заказа</param>
-/// <param name="PaymentTime">Время оплаты</param>
+/// <param name="CreateDate">Время оплаты</param>
+/// <param name="PaymentStatus">Статус оплаты</param>
 public sealed record OrderContract(
   long Id,
   string Description,
   decimal Price,
   OrderProductContract Product,
   OrderPayerContract Payer,
-  DateTime PaymentTime
+  DateTime CreateDate,
+  PaymentStatus PaymentStatus
 ) {
   /// <summary>
   /// Преобразование модели к контракту заказа
@@ -28,7 +30,8 @@ public sealed record OrderContract(
     order.Price,
     new OrderProductContract(order.Product),
     new OrderPayerContract(order.Payer),
-    order.PaymentTime) {}
+    order.CreateDate,
+    order.PaymentStatus) {}
 }
 
 /// <summary>
