@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder;
 using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderById;
 using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
+using PayOrderById = Karpenko.University.Backend.Application.UseCases.PayOrderById;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;
 
@@ -15,7 +16,8 @@ namespace Karpenko.University.Backend.Persistence.Repositories;
 internal sealed class OrderRepository(PostgresDbContext db) : AbstractRepository<PostgresDbContext>(db),
   CreateOrder.IOrderRepository,
   GetOrderById.IOrderRepository,
-  DeleteOrderById.IOrderRepository
+  DeleteOrderById.IOrderRepository,
+  PayOrderById.IOrderRepository
 {
   /// <inheritdoc />
   public async Task<OrderModel> CreateOrderAsync(CreateOrder.CreateOrderDto order, CancellationToken cancellationToken) {
@@ -64,5 +66,14 @@ internal sealed class OrderRepository(PostgresDbContext db) : AbstractRepository
                              permission.PermissionSubject == PermissionSubject.Order)
         .ExecuteDeleteAsync(cancellationToken);
     }, cancellationToken);
+  }
+
+  /// <inheritdoc />
+  public async Task PayOrderByIdAsync(long orderId, CancellationToken cancellationToken) {
+    await db.Orders
+      .Where(order => order.Id == orderId)
+      .ExecuteUpdateAsync(
+        builder => builder.SetProperty(order => order.PaymentStatus, PaymentStatus.Paid),
+        cancellationToken);
   }
 }

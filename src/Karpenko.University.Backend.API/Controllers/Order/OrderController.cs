@@ -9,6 +9,7 @@ using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder
 using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderById;
 using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
+using PayOrderById = Karpenko.University.Backend.Application.UseCases.PayOrderById;
 using Results = Karpenko.University.Backend.Application.Validation.Results;
 
 namespace Karpenko.University.Backend.API.Controllers.Order;
@@ -85,12 +86,46 @@ public sealed class OrderController : ExtendedControllerBase {
   /// <summary>
   /// Оплата заказа
   /// </summary>
+  /// <response code="200">Заказ оплачен</response>
+  /// <response code="404">Заказ не найден</response>
+  /// <response code="404">Оплачиваемый курс не найден</response>
+  /// <response code="403">Недостаточно прав</response>
+  /// <response code="401">Необходима авторизация</response>
+  [ProducesResponseType<OrderContract>(StatusCodes.Status200OK)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status404NotFound)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status403Forbidden)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status401Unauthorized)]
+  [Authorize]
   [HttpPost("{orderId:long:min(0)}")]
   public async Task<IActionResult> PayOrderAsync(
     [FromRoute(Name = "orderId")] long orderId,
+    [FromServices] PayOrderById.UseCase payOrderByIdUseCase,
+    [FromServices] GetOrderById.UseCase getOrderByIdUseCase,
     CancellationToken cancellationToken
   ) {
-    return Ok();
+    var getOrderResult = await getOrderByIdUseCase
+      .SetEntryData(orderId)
+      .ExecuteAsync(cancellationToken);
+
+    if (getOrderResult is not GetOrderById.Results.Found { Order: var foundOrder })
+      return NotFound(ErrorContract.NotFound("Заказ не найден"));
+
+    // Проверка доступа, надо бы через пермишены, но мне в падлу уже =)
+    if (GetClaimId() != foundOrder.Payer.Id)
+      return Forbidden(ErrorContract.Forbidden("Нет доступа для отмены заказа"));
+
+    // оплата заказа
+    var payResult = await payOrderByIdUseCase
+      .SetEntryData(orderId)
+      .ExecuteAsync(cancellationToken);
+
+    return payResult switch {
+      PayOrderById.Results.Payed { Order: var order } => Ok(new OrderContract(order)),
+      PayOrderById.Results.OrderNotFound => NotFound(ErrorContract.NotFound("Заказ не найден")),
+      PayOrderById.Results.CourseNotFound => NotFound(ErrorContract.NotFound("Курс из заказа не найден")),
+      PayOrderById.Results.PriceChanged => NotFound(ErrorContract.BadRequest("Цена за курс изменилась с момента формирования заказа")),
+      _ => CantHandleRequest()
+    };
   }
 
   /// <summary>
@@ -156,10 +191,18 @@ public sealed class OrderController : ExtendedControllerBase {
   public async Task<IActionResult> DeleteOrderByIdAsync(
     [FromRoute(Name = "orderId")] long orderId,
     [FromServices] DeleteOrderById.UseCase deleteOrderByIdUseCase,
+    [FromServices] GetOrderById.UseCase getOrderByIdUseCase,
     CancellationToken cancellationToken
   ) {
+    var getOrderResult = await getOrderByIdUseCase
+      .SetEntryData(orderId)
+      .ExecuteAsync(cancellationToken);
+
+    if (getOrderResult is not GetOrderById.Results.Found { Order: var foundOrder })
+      return NotFound(ErrorContract.NotFound("Заказ не найден"));
+
     // Проверка доступа, надо бы через пермишены, но мне в падлу уже =)
-    if (GetClaimId() != orderId)
+    if (GetClaimId() != foundOrder.Payer.Id)
       return Forbidden(ErrorContract.Forbidden("Нет доступа для отмены заказа"));
     
     var deleteResult = await deleteOrderByIdUseCase
