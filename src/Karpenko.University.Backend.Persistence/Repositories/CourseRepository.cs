@@ -6,6 +6,7 @@ using GetCourses = Karpenko.University.Backend.Application.UseCases.GetCourses;
 using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourseById;
 using GetCoursesByTagId = Karpenko.University.Backend.Application.UseCases.GetCoursesByTagId;
 using CreateComment = Karpenko.University.Backend.Application.UseCases.CreateComment;
+using PayOrderById = Karpenko.University.Backend.Application.UseCases.PayOrderById;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;
 
@@ -16,7 +17,8 @@ internal sealed class CourseRepository(PostgresDbContext db) : AbstractRepositor
   GetCourses.ICourseRepository,
   GetCourseById.ICourseRepository,
   GetCoursesByTagId.ICourseRepository,
-  CreateComment.ICourseRepository
+  CreateComment.ICourseRepository,
+  PayOrderById.ICourseRepository
 {
   /// <inheritdoc />
   public async Task<ICollection<CourseModel>> GetCoursesAsync(PaginationModel pagination, CancellationToken cancellationToken) {
@@ -65,5 +67,19 @@ internal sealed class CourseRepository(PostgresDbContext db) : AbstractRepositor
   /// <inheritdoc />
   public Task<bool> CheckCourseExistsByIdAsync(long courseId, CancellationToken cancellationToken) {
     return db.Courses.AnyAsync(course => course.Id == courseId, cancellationToken);
+  }
+
+  /// <inheritdoc />
+  public async Task<CourseModel?> GetCourseByOrderId(long orderId, CancellationToken cancellationToken) {
+    var courseEntity = await db.Courses
+      .AsNoTracking()
+      .Join(
+        db.Orders,
+        course => course.Id,
+        order => order.ProductId,
+        (course, order) => new { course, order })
+      .FirstOrDefaultAsync(item => item.order.Id == orderId, cancellationToken);
+    
+    return courseEntity?.course.ToCourseModel();
   }
 }

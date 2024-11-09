@@ -1,6 +1,7 @@
 ﻿using Karpenko.University.Backend.Domain.Course;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseBindCourseTag;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseComment;
+using Karpenko.University.Backend.Persistence.Database.Entities.CourseContent;
 using Karpenko.University.Backend.Persistence.Database.Entities.CourseTag;
 
 namespace Karpenko.University.Backend.Persistence.Database.Entities.Course;
@@ -58,6 +59,11 @@ internal sealed class CourseEntity {
   /// Навигация на комментарии к курсу
   /// </summary>
   public ICollection<CourseCommentEntity> Comments { get; set; } = [];
+  
+  /// <summary>
+  /// Содержимое курса
+  /// </summary>
+  public CourseContentEntity? CourseContent { get; set; }
 
   /// <summary>
   /// Приведение сущности к модели курса

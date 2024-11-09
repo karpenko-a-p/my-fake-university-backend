@@ -70,6 +70,7 @@ public static class DependencyInjection {
     services.AddScoped<GetOrderById.IOrderRepository, OrderRepository>();
     services.AddScoped<DeleteOrderById.IOrderRepository, OrderRepository>();
     services.AddScoped<PayOrderById.IOrderRepository, OrderRepository>();
+    services.AddScoped<PayOrderById.ICourseRepository, CourseRepository>();
     services.AddScoped<GetOrdersByOwnerId.IOrderRepository, OrderRepository>();
 
     return services;

@@ -35,16 +35,6 @@ internal static class Tables {
   public const string CoursesTags = "courses_tags";
 
   /// <summary>
-  /// Таблица с этапами/шагами курсов
-  /// </summary>
-  public const string CoursesSteps = "courses_steps";
-
-  /// <summary>
-  /// Таблица с данными по стоимости товаров
-  /// </summary>
-  public const string ProductsPrices = "products_prices";
-
-  /// <summary>
   /// Таблица с данными курсов
   /// </summary>
   public const string Courses = "courses_data";
@@ -58,4 +48,9 @@ internal static class Tables {
   /// Таблица с данными заказов
   /// </summary>
   public const string Orders = "orders_data";
+
+  /// <summary>
+  /// Таблица с данными содержимого курсов
+  /// </summary>
+  public const string Content = "course_content";
 }
