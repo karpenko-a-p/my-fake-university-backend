@@ -9,10 +9,7 @@ public interface IPermissionRepository {
   /// <summary>
   /// Добавить запись с новыми правами
   /// </summary>
-  Task<PermissionModel> AddPermissionAsync(
-    long ownerId,
-    long subjectId,
-    PermissionType permissionType,
-    PermissionSubject permissionSubject,
+  Task<ICollection<PermissionModel>> AddPermissionAsync(
+    ICollection<CreatePermissionInDBDto> permissions,
     CancellationToken cancellationToken);
 }

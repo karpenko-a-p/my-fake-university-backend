@@ -116,7 +116,9 @@ public sealed class CommentController : ExtendedControllerBase {
     
     // Предоставление доступа
     var addAccessResult = await addAccessUseCase
-      .SetEntryData(new(studentId, comment.Id, PermissionType.Delete, PermissionSubject.Comment))
+      .SetEntryData(new([
+        new(studentId, comment.Id, PermissionType.Delete, PermissionSubject.Comment)
+      ]))
       .ExecuteAsync(cancellationToken);
     
     if (addAccessResult is not AddAccess.Results.Success)

@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using Karpenko.University.Backend.API.Controllers.Order.Contracts;
+using Karpenko.University.Backend.Application.Pagination;
 using Karpenko.University.Backend.Domain.Permission;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,9 @@ using AddAccess = Karpenko.University.Backend.Application.UseCases.AddAccess;
 using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderById;
 using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
 using PayOrderById = Karpenko.University.Backend.Application.UseCases.PayOrderById;
+using GetOrdersByOwnerId = Karpenko.University.Backend.Application.UseCases.GetOrdersByOwnerId;
+using CheckAccess = Karpenko.University.Backend.Application.UseCases.CheckAccess;
+using static Karpenko.University.Backend.Application.UseCases.CreateOrder.Constants;
 using Results = Karpenko.University.Backend.Application.Validation.Results;
 
 namespace Karpenko.University.Backend.API.Controllers.Order;
@@ -63,17 +67,23 @@ public sealed class OrderController : ExtendedControllerBase {
     var createOrderResult = await createOrderUseCase
       .SetEntryData(new(student, course, createOrderContract.Description))
       .ExecuteAsync(cancellationToken);
-    
+
     if (createOrderResult is not CreateOrder.Results.Created { Order: var order })
       return createOrderResult switch {
-        Results.ValidationFailure { ValidationResult: var validationResult } => BadRequest(ErrorContract.ValidationError(validationResult)),
+        Results.ValidationFailure { ValidationResult: var validationResult } => BadRequest(
+          ErrorContract.ValidationError(validationResult)),
         CreateOrder.Results.AlreadyBought => BadRequest(ErrorContract.BadRequest("Нельзя сделать заказ повторно")),
         _ => CantHandleRequest()
       };
 
     // Предоставление доступа на отмену заказа
     var addAccessResult = await addAccessUseCase
-      .SetEntryData(new(student.Id, order.Id, PermissionType.Delete, PermissionSubject.Order))
+      .SetEntryData(new ([
+        new(student.Id, order.Id, PermissionType.Delete, PermissionSubject.Order),
+        new(student.Id, order.Id, PermissionType.Update, PermissionSubject.Order),
+        new(student.Id, order.Id, PermissionType.Read, PermissionSubject.Order),
+        new(student.Id, AllOwnOrdersId, PermissionType.Read, PermissionSubject.Order),
+      ]))
       .ExecuteAsync(cancellationToken);
 
     return addAccessResult switch {
@@ -100,19 +110,15 @@ public sealed class OrderController : ExtendedControllerBase {
   public async Task<IActionResult> PayOrderAsync(
     [FromRoute(Name = "orderId")] long orderId,
     [FromServices] PayOrderById.UseCase payOrderByIdUseCase,
-    [FromServices] GetOrderById.UseCase getOrderByIdUseCase,
+    [FromServices] CheckAccess.UseCase checkAccessUseCase,
     CancellationToken cancellationToken
   ) {
-    var getOrderResult = await getOrderByIdUseCase
-      .SetEntryData(orderId)
+    var checkAccessResult = await checkAccessUseCase
+      .SetEntryData(new(GetClaimId(), orderId, PermissionType.Update, PermissionSubject.Order))
       .ExecuteAsync(cancellationToken);
 
-    if (getOrderResult is not GetOrderById.Results.Found { Order: var foundOrder })
-      return NotFound(ErrorContract.NotFound("Заказ не найден"));
-
-    // Проверка доступа, надо бы через пермишены, но мне в падлу уже =)
-    if (GetClaimId() != foundOrder.Payer.Id)
-      return Forbidden(ErrorContract.Forbidden("Нет доступа для отмены заказа"));
+    if (checkAccessResult is not CheckAccess.Results.HasAccess)
+      return Forbidden(ErrorContract.Forbidden("Нет доступа для оплаты заказа"));
 
     // оплата заказа
     var payResult = await payOrderByIdUseCase
@@ -144,8 +150,17 @@ public sealed class OrderController : ExtendedControllerBase {
   public async Task<IActionResult> GetOrderByIdAsync(
     [FromRoute(Name = "orderId")] long orderId,
     [FromServices] GetOrderById.UseCase getOrderByIdUseCase,
+    [FromServices] CheckAccess.UseCase checkAccessUseCase,
     CancellationToken cancellationToken
   ) {
+    // Проверка доступа
+    var checkAccessResult = await checkAccessUseCase
+      .SetEntryData(new(GetClaimId(), orderId, PermissionType.Read, PermissionSubject.Order))
+      .ExecuteAsync(cancellationToken);
+
+    if (checkAccessResult is not CheckAccess.Results.HasAccess)
+      return Forbidden(ErrorContract.Forbidden("Нет доступа для просмотра данных заказа"));
+
     // Получение заказа
     var getOrderResult = await getOrderByIdUseCase
       .SetEntryData(orderId)
@@ -157,22 +172,44 @@ public sealed class OrderController : ExtendedControllerBase {
         _ => CantHandleRequest()
       };
 
-    // Проверка доступа, надо бы через пермишены, но мне в падлу уже =)
-    if (GetClaimId() != order.Payer.Id)
-      return Forbidden(ErrorContract.Forbidden("Нет доступа для просмотра данных заказа"));
-    
     return Ok(new OrderContract(order));
   }
 
   /// <summary>
   /// Получение заказов определенного пользователя
   /// </summary>
+  /// <response code="200">Список заказов</response>
+  /// <response code="401">Необходима авторизация</response>
+  /// <response code="403">Недостаточно прав</response>
+  [ProducesResponseType<PaginatedItems<OrderContract>>(StatusCodes.Status200OK)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status401Unauthorized)]
+  [ProducesResponseType<ErrorContract>(StatusCodes.Status403Forbidden)]
+  [Authorize]
   [HttpGet("by-owner/{studentId:long:min(0)}")]
   public async Task<IActionResult> GetOrderByStudentIdAsync(
     [FromRoute(Name = "studentId")] long studentId,
+    [FromQuery] PaginationModel paginationModel,
+    [FromServices] GetOrdersByOwnerId.UseCase getOrdersByOwnerIdUseCase,
+    [FromServices] CheckAccess.UseCase checkAccessUseCase,
     CancellationToken cancellationToken
   ) {
-    return Ok();
+    // Проверка доступа
+    var checkAccessResult = await checkAccessUseCase
+      .SetEntryData(new(GetClaimId(), AllOwnOrdersId, PermissionType.Read, PermissionSubject.Order))
+      .ExecuteAsync(cancellationToken);
+
+    if (checkAccessResult is not CheckAccess.Results.HasAccess)
+      return Forbidden(ErrorContract.Forbidden("Нет доступа для просмотра заказов"));
+
+    // Получение заказов
+    var getResult = await getOrdersByOwnerIdUseCase
+      .SetEntryData(new(studentId, paginationModel))
+      .ExecuteAsync(cancellationToken);
+
+    if (getResult is not GetOrdersByOwnerId.Results.OrderCollection { Orders: var orders })
+      return CantHandleRequest();
+
+    return Ok(orders.Map(order => new OrderContract(order)));
   }
 
   /// <summary>
@@ -192,19 +229,26 @@ public sealed class OrderController : ExtendedControllerBase {
     [FromRoute(Name = "orderId")] long orderId,
     [FromServices] DeleteOrderById.UseCase deleteOrderByIdUseCase,
     [FromServices] GetOrderById.UseCase getOrderByIdUseCase,
+    [FromServices] CheckAccess.UseCase checkAccessUseCase,
     CancellationToken cancellationToken
   ) {
+    // Проверка доступа
+    var checkAccessResult = await checkAccessUseCase
+      .SetEntryData(new(GetClaimId(), orderId, PermissionType.Delete, PermissionSubject.Order))
+      .ExecuteAsync(cancellationToken);
+
+    if (checkAccessResult is not CheckAccess.Results.HasAccess)
+      return Forbidden(ErrorContract.Forbidden("Нет доступа для удаление заказа"));
+
+    // получение данных заказа
     var getOrderResult = await getOrderByIdUseCase
       .SetEntryData(orderId)
       .ExecuteAsync(cancellationToken);
 
-    if (getOrderResult is not GetOrderById.Results.Found { Order: var foundOrder })
+    if (getOrderResult is not GetOrderById.Results.Found)
       return NotFound(ErrorContract.NotFound("Заказ не найден"));
 
-    // Проверка доступа, надо бы через пермишены, но мне в падлу уже =)
-    if (GetClaimId() != foundOrder.Payer.Id)
-      return Forbidden(ErrorContract.Forbidden("Нет доступа для отмены заказа"));
-    
+    // Удаление заказа
     var deleteResult = await deleteOrderByIdUseCase
       .SetEntryData(orderId)
       .ExecuteAsync(cancellationToken);

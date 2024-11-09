@@ -1,4 +1,5 @@
-﻿using Karpenko.University.Backend.Domain.Order;
+﻿using Karpenko.University.Backend.Application.Pagination;
+using Karpenko.University.Backend.Domain.Order;
 using Karpenko.University.Backend.Domain.Permission;
 using Karpenko.University.Backend.Persistence.Database.Contexts;
 using Karpenko.University.Backend.Persistence.Database.Entities.Order;
@@ -7,6 +8,7 @@ using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder
 using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderById;
 using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
 using PayOrderById = Karpenko.University.Backend.Application.UseCases.PayOrderById;
+using GetOrdersByOwnerId = Karpenko.University.Backend.Application.UseCases.GetOrdersByOwnerId;
 
 namespace Karpenko.University.Backend.Persistence.Repositories;
 
@@ -17,7 +19,8 @@ internal sealed class OrderRepository(PostgresDbContext db) : AbstractRepository
   CreateOrder.IOrderRepository,
   GetOrderById.IOrderRepository,
   DeleteOrderById.IOrderRepository,
-  PayOrderById.IOrderRepository
+  PayOrderById.IOrderRepository,
+  GetOrdersByOwnerId.IOrderRepository
 {
   /// <inheritdoc />
   public async Task<OrderModel> CreateOrderAsync(CreateOrder.CreateOrderDto order, CancellationToken cancellationToken) {
@@ -75,5 +78,20 @@ internal sealed class OrderRepository(PostgresDbContext db) : AbstractRepository
       .ExecuteUpdateAsync(
         builder => builder.SetProperty(order => order.PaymentStatus, PaymentStatus.Paid),
         cancellationToken);
+  }
+
+  /// <inheritdoc />
+  public async Task<ICollection<OrderModel>> GetOrdersByOwnerId(long ownerId, PaginationModel pagination, CancellationToken cancellationToken) {
+    return await db.Orders
+      .AsNoTracking()
+      .Where(order => order.PayerId == ownerId)
+      .Paginate(pagination)
+      .Select(order => order.ToOrderModel())
+      .ToListAsync(cancellationToken);
+  }
+
+  /// <inheritdoc />
+  public Task<int> GetTotalOrdersByOwnerId(long ownerId, CancellationToken cancellationToken) {
+    return db.Orders.CountAsync(order => order.PayerId == ownerId, cancellationToken);
   }
 }

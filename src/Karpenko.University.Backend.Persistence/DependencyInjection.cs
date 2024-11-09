@@ -20,6 +20,7 @@ using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder
 using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderById;
 using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
 using PayOrderById = Karpenko.University.Backend.Application.UseCases.PayOrderById;
+using GetOrdersByOwnerId = Karpenko.University.Backend.Application.UseCases.GetOrdersByOwnerId;
 using Karpenko.University.Backend.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -69,6 +70,7 @@ public static class DependencyInjection {
     services.AddScoped<GetOrderById.IOrderRepository, OrderRepository>();
     services.AddScoped<DeleteOrderById.IOrderRepository, OrderRepository>();
     services.AddScoped<PayOrderById.IOrderRepository, OrderRepository>();
+    services.AddScoped<GetOrdersByOwnerId.IOrderRepository, OrderRepository>();
 
     return services;
   }

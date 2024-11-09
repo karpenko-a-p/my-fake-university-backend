@@ -47,8 +47,8 @@ internal sealed class CourseRepository(PostgresDbContext db) : AbstractRepositor
       .AsNoTracking()
       .AsSplitQuery()
       .Include(course => course.Tags)
-      .Paginate(pagination)
       .Where(course => course.Tags.Any(tag => tag.Id == tagId))
+      .Paginate(pagination)
       .Select(course => course.ToCourseModel())
       .ToListAsync(cancellationToken);
   }
@@ -57,8 +57,8 @@ internal sealed class CourseRepository(PostgresDbContext db) : AbstractRepositor
   public Task<int> GetCoursesCountByTagIdAsync(long tagId, PaginationModel pagination, CancellationToken cancellationToken) {
     return db.Courses
       .Include(course => course.Tags)
-      .Paginate(pagination)
       .Where(course => course.Tags.Any(tag => tag.Id == tagId))
+      .Paginate(pagination)
       .CountAsync(cancellationToken);
   }
 

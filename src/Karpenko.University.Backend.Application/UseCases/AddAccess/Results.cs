@@ -10,5 +10,5 @@ public static class Results {
   /// <summary>
   /// Доступ предоставлен
   /// </summary>
-  public sealed record Success(PermissionModel Permission) : IResult;
+  public sealed record Success(ICollection<PermissionModel> Permission) : IResult;
 }

@@ -9,12 +9,14 @@ namespace Karpenko.University.Backend.Infrastructure.Validation;
 internal sealed class AddAccessEntryDataValidator : AbstractValidator<AddAccess.EntryData> {
   /// <inheritdoc />
   protected override void ValidateModel(AddAccess.EntryData model) {
-    NumberValidator(nameof(model.OwnerId), model.OwnerId.GetValueOrDefault())
-      .NotEmpty()
-      .NotNull();
+    foreach (var createPermissionDto in model.Permissions) {
+      NumberValidator(nameof(createPermissionDto.OwnerId), createPermissionDto.OwnerId.GetValueOrDefault())
+        .NotEmpty()
+        .NotNull();
 
-    NumberValidator(nameof(model.SubjectId), model.SubjectId.GetValueOrDefault())
-      .NotEmpty()
-      .NotNull();
+      NumberValidator(nameof(createPermissionDto.SubjectId), createPermissionDto.SubjectId.GetValueOrDefault())
+        .NotEmpty()
+        .NotNull();
+    }
   }
 }

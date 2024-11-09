@@ -31,24 +31,26 @@ internal sealed class PermissionRepository(PostgresDbContext db) :
   }
 
   /// <inheritdoc />
-  public async Task<PermissionModel> AddPermissionAsync(
-    long ownerId,
-    long subjectId,
-    PermissionType permissionType,
-    PermissionSubject permissionSubject,
+  public async Task<ICollection<PermissionModel>> AddPermissionAsync(
+    ICollection<AddAccess.CreatePermissionInDBDto> permissions,
     CancellationToken cancellationToken
   ) {
-    var permission = new PermissionEntity {
-      OwnerId = ownerId,
-      SubjectId = subjectId,
-      PermissionType = permissionType,
-      PermissionSubject = permissionSubject
-    };
+    var newPermissions =permissions.Select(permission => new PermissionEntity {
+      OwnerId = permission.OwnerId,
+      SubjectId = permission.SubjectId,
+      PermissionType = permission.PermissionType,
+      PermissionSubject = permission.PermissionSubject,
+    });
     
-    await db.Permissions.AddAsync(permission, cancellationToken);
+    await db.Permissions.AddRangeAsync(newPermissions, cancellationToken);
     await db.SaveChangesAsync(cancellationToken);
 
-    return permission.ToPermissionModel();
+    return newPermissions.Select(permission => new PermissionModel {
+      OwnerId = permission.OwnerId,
+      PermissionSubject = permission.PermissionSubject,
+      PermissionType = permission.PermissionType,
+      SubjectId = permission.SubjectId
+    }).ToList();
   }
 
   /// <inheritdoc />

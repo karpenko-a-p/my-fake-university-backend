@@ -19,6 +19,7 @@ using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderBy
 using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder;
 using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
 using PayOrderById = Karpenko.University.Backend.Application.UseCases.PayOrderById;
+using GetOrdersByOwnerId = Karpenko.University.Backend.Application.UseCases.GetOrdersByOwnerId;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Karpenko.University.Backend.Application;
@@ -53,6 +54,7 @@ public static class DependencyInjection {
     services.AddTransient<GetOrderById.UseCase>();
     services.AddTransient<DeleteOrderById.UseCase>();
     services.AddTransient<PayOrderById.UseCase>();
+    services.AddTransient<GetOrdersByOwnerId.UseCase>();
 
     return services;
   }

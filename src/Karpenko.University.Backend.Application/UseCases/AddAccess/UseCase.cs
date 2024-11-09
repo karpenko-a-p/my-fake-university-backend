@@ -18,10 +18,7 @@ public sealed class UseCase(
       return new Validation.Results.ValidationFailure(validationResult);
 
     var permission = await permissionRepository.AddPermissionAsync(
-      EntryData.OwnerId.GetValueOrDefault(),
-      EntryData.SubjectId.GetValueOrDefault(),
-      EntryData.PermissionType,
-      EntryData.PermissionSubject,
+      EntryData.Permissions.Select(order => new CreatePermissionInDBDto(order)).ToList(),
       cancellationToken);
 
     return new Results.Success(permission);

@@ -35,7 +35,8 @@ public sealed class UseCase(
       
       var permissionCreatingTask = permissionRepository.AddPermissionsToStudentAsync([
         GetBaseStudentPermission(studentModel.Id, PermissionType.Delete),
-        GetBaseStudentPermission(studentModel.Id, PermissionType.Update)
+        GetBaseStudentPermission(studentModel.Id, PermissionType.Update),
+        GetBaseStudentPermission(studentModel.Id, PermissionType.Read)
       ], cancellationToken);
 
       await passwordSavingTask;
@@ -54,7 +55,8 @@ public sealed class UseCase(
     return new() {
       OwnerId = studentId,
       SubjectId = studentId,
-      PermissionType = permissionType
+      PermissionType = permissionType,
+      PermissionSubject = PermissionSubject.Student
     };
   }
 }
