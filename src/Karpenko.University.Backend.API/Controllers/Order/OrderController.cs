@@ -111,6 +111,7 @@ public sealed class OrderController : ExtendedControllerBase {
     [FromRoute(Name = "orderId")] long orderId,
     [FromServices] PayOrderById.UseCase payOrderByIdUseCase,
     [FromServices] CheckAccess.UseCase checkAccessUseCase,
+    [FromServices] AddAccess.UseCase addAccessUseCase,
     CancellationToken cancellationToken
   ) {
     var checkAccessResult = await checkAccessUseCase
@@ -125,11 +126,23 @@ public sealed class OrderController : ExtendedControllerBase {
       .SetEntryData(orderId)
       .ExecuteAsync(cancellationToken);
 
-    return payResult switch {
-      PayOrderById.Results.Payed { Order: var order } => Ok(new OrderContract(order)),
-      PayOrderById.Results.OrderNotFound => NotFound(ErrorContract.NotFound("Заказ не найден")),
-      PayOrderById.Results.CourseNotFound => NotFound(ErrorContract.NotFound("Курс из заказа не найден")),
-      PayOrderById.Results.PriceChanged => NotFound(ErrorContract.BadRequest("Цена за курс изменилась с момента формирования заказа")),
+    if (payResult is not PayOrderById.Results.Payed { Order: var order })
+      return payResult switch {
+        PayOrderById.Results.OrderNotFound => NotFound(ErrorContract.NotFound("Заказ не найден")),
+        PayOrderById.Results.CourseNotFound => NotFound(ErrorContract.NotFound("Курс из заказа не найден")),
+        PayOrderById.Results.PriceChanged => NotFound(ErrorContract.BadRequest("Цена за курс изменилась с момента формирования заказа")),
+        _ => CantHandleRequest()
+      };
+
+    // Предоставление доступа к содержимому курса
+    var addAccessResult = await addAccessUseCase
+      .SetEntryData(new([
+        new(order.Payer.Id, order.Product.Id, PermissionType.Read, PermissionSubject.CourseContent)
+      ]))
+      .ExecuteAsync(cancellationToken);
+
+    return addAccessResult switch {
+      AddAccess.Results.Success => Ok(new OrderContract(order)),
       _ => CantHandleRequest()
     };
   }

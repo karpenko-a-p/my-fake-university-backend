@@ -10,6 +10,11 @@ public enum PermissionSubject : byte {
   Course = 1,
 
   /// <summary>
+  /// Содержимое курса
+  /// </summary>
+  CourseContent,
+
+  /// <summary>
   /// Комментарий
   /// </summary>
   Comment,
