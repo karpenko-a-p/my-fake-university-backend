@@ -17,6 +17,7 @@ using GetCommentsByCourseId = Karpenko.University.Backend.Application.UseCases.G
 using DeleteCommentById = Karpenko.University.Backend.Application.UseCases.DeleteCommentById;
 using GetCourseById = Karpenko.University.Backend.Application.UseCases.GetCourseById;
 using CreateOrder = Karpenko.University.Backend.Application.UseCases.CreateOrder;
+using GetCourseVideo = Karpenko.University.Backend.Application.UseCases.GetCourseVideo;
 
 namespace Karpenko.University.Backend.Infrastructure;
 
@@ -29,7 +30,6 @@ public static class DependencyInjection {
   /// </summary>
   public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
     // Распределенный кэш
-    services.ConfigureOptions<ConfigureCacheOptions>();
     services.AddStackExchangeRedisCache(options => {
       options.Configuration = configuration.GetConnectionString("Redis");
     });
@@ -44,6 +44,7 @@ public static class DependencyInjection {
     services.AddSingleton<CreateStudent.IPasswordService, PasswordService>();
     services.AddSingleton<VerifyStudentPassword.IPasswordService, PasswordService>();
     services.AddSingleton<GenerateJwtToken.IJwtService, JwtService>();
+    services.AddSingleton<GetCourseVideo.IVideoService, VideoService>();
 
     // Валидаторы
     services.AddSingleton<IValidator<CreateStudent.EntryData>, CreateStudentEntryDataValidator>();
@@ -54,6 +55,7 @@ public static class DependencyInjection {
     services.AddSingleton<IValidator<AddAccess.EntryData>, AddAccessEntryDataValidator>();
     services.AddSingleton<IValidator<GetCourseById.EntryData>, GetCourseByIdEntryDataValidator>();
     services.AddSingleton<IValidator<CreateOrder.EntryData>, CreateOrderEntryDataValidator>();
+    services.AddSingleton<IValidator<GetCourseVideo.EntryData>, GetCourseVideoEntryDataValidator>();
 
     return services;
   }

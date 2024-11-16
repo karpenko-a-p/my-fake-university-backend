@@ -22,8 +22,8 @@ internal sealed class Configuration : IEntityTypeConfiguration<CourseContentEnti
       .HasColumnName("course_id")
       .IsRequired();
 
-    builder.Property(model => model.VideoPath)
-      .HasColumnName("video_path")
+    builder.Property(model => model.VideoFileName)
+      .HasColumnName("video_filename")
       .HasColumnType("text")
       .IsRequired();
 

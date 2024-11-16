@@ -21,6 +21,7 @@ using GetOrderById = Karpenko.University.Backend.Application.UseCases.GetOrderBy
 using DeleteOrderById = Karpenko.University.Backend.Application.UseCases.DeleteOrderById;
 using PayOrderById = Karpenko.University.Backend.Application.UseCases.PayOrderById;
 using GetOrdersByOwnerId = Karpenko.University.Backend.Application.UseCases.GetOrdersByOwnerId;
+using GetCourseVideo = Karpenko.University.Backend.Application.UseCases.GetCourseVideo;
 using Karpenko.University.Backend.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -72,6 +73,7 @@ public static class DependencyInjection {
     services.AddScoped<PayOrderById.IOrderRepository, OrderRepository>();
     services.AddScoped<PayOrderById.ICourseRepository, CourseRepository>();
     services.AddScoped<GetOrdersByOwnerId.IOrderRepository, OrderRepository>();
+    services.AddScoped<GetCourseVideo.ICourseContentRepository, CourseContentRepository>();
 
     return services;
   }

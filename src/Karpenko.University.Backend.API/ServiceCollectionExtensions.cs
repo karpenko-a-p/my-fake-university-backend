@@ -2,7 +2,9 @@
 using System.Text;
 using Karpenko.University.Backend.API.Controllers;
 using Karpenko.University.Backend.API.Middlewares;
+using Karpenko.University.Backend.Application.Caching;
 using Karpenko.University.Backend.Application.UseCases.GenerateJwtToken;
+using Karpenko.University.Backend.Application.UseCases.GetCourseVideo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -49,7 +51,7 @@ internal static class ServiceCollectionExtensions {
       // файл с документацией xml
       string xmlPath = Path.Combine(AppContext.BaseDirectory, "Karpenko.University.Backend.API.xml");
       options.IncludeXmlComments(xmlPath);
-      
+
       // авторизация
       options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme {
         Description = "JWT токен в куках",
@@ -150,7 +152,11 @@ internal static class ServiceCollectionExtensions {
   /// </summary>
   internal static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration) {
     services.Configure<AuthOptions>(configuration.GetSection("Jwt"));
-    
+    services.Configure<VideoContentOptions>(configuration.GetSection("VideoContent"));
+    services.Configure<CacheOptions>(config => {
+      config.ConnectionString = configuration.GetConnectionString("Redis") ?? string.Empty;
+    });
+
     return services;
   }
 }

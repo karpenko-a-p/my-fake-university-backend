@@ -1,4 +1,5 @@
-﻿using Karpenko.University.Backend.Persistence.Database.Entities.Course;
+﻿using Karpenko.University.Backend.Domain.CourseContent;
+using Karpenko.University.Backend.Persistence.Database.Entities.Course;
 
 namespace Karpenko.University.Backend.Persistence.Database.Entities.CourseContent;
 
@@ -17,12 +18,22 @@ internal sealed class CourseContentEntity {
   public long CourseId { get; set; }
 
   /// <summary>
-  /// Путь к видео с контентом курса
+  /// Название файла с видео с контентом курса
   /// </summary>
-  public string VideoPath { get; set; } = string.Empty;
+  public string VideoFileName { get; set; } = string.Empty;
   
   /// <summary>
   /// Навигация на курс
   /// </summary>
   public CourseEntity? Course { get; set; }
+
+  /// <summary>
+  /// Преобразование к модели
+  /// </summary>
+  public CourseContentModel ToCourseContentModel() {
+    return new() {
+      Id = Id,
+      VideoFileName = VideoFileName,
+    };
+  }
 }

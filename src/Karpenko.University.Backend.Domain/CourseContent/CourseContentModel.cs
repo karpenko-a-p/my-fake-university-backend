@@ -10,7 +10,7 @@ public sealed class CourseContentModel {
   public long Id { get; set; }
 
   /// <summary>
-  /// Путь к видео с контентом курса
+  /// Название файла с видео с контентом курса
   /// </summary>
-  public string VideoPath { get; set; } = string.Empty;
+  public string VideoFileName { get; set; } = string.Empty;
 }
